@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Anim {
@@ -10,6 +11,7 @@ public class Anim {
     private Texture image;
     private Animation<TextureRegion> animation;
     private float time;
+    private TextureAtlas atlas;
 
     public Anim(String imageName, int columns, int rows, Animation.PlayMode playMode) {
 
@@ -31,9 +33,20 @@ public class Anim {
         this.animation.setPlayMode(playMode);
         time += Gdx.graphics.getDeltaTime();
     }
+    public Anim(String atlasName, Animation.PlayMode playMode) {
+
+        atlas = new TextureAtlas(atlasName);
+        animation = new Animation<TextureRegion>(1/10f, atlas.findRegions("Went"));
+        animation.setPlayMode(playMode);
+
+        time += Gdx.graphics.getDeltaTime();
+    }
 
     public void dispose() {
-        image.dispose();
+        if (image!=null) {
+            image.dispose();
+        }
+        atlas.dispose();
     }
 
     public TextureRegion getFrame() {
