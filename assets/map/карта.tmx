@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.9" tiledversion="1.9.1" orientation="orthogonal" renderorder="right-down" width="58" height="34" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="6">
+ <tileset firstgid="1" name="monochrome_tilemap" tilewidth="16" tileheight="16" spacing="1" tilecount="400" columns="20">
+  <image source="monochrome_tilemap.png" trans="000000" width="339" height="339"/>
+  <tile id="131">
+   <animation>
+    <frame tileid="349" duration="100"/>
+    <frame tileid="350" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="136">
+   <animation>
+    <frame tileid="360" duration="300"/>
+    <frame tileid="361" duration="300"/>
+    <frame tileid="362" duration="300"/>
+    <frame tileid="363" duration="300"/>
+    <frame tileid="364" duration="300"/>
+    <frame tileid="365" duration="300"/>
+   </animation>
+  </tile>
+ </tileset>
+ <layer id="3" name="Слой тайлов 1" width="58" height="34">
+  <data encoding="base64" compression="zlib">
+   eJztz8EJgDAQRcEtKrXYjVqBWoPaqDkIXiURojIDj73+jQAAAACAb0jn7XPDjcYGG2uluP78qxTf+rN7IADeb8rNBS0txlZYc1tBe4uxkB1a1x4p
+  </data>
+ </layer>
+ <layer id="4" name="Слой тайлов 2" width="58" height="34">
+  <data encoding="base64" compression="zlib">
+   eJztz0EKgCAUhGFX3UE6QKvqBh3CQ3SSNt46hR6EkLUoH9r/wSDyNjPGAAAAAAAA6Oq0CxRgj7dXbfEtm/xb3JpuFK1sXcz1RnHeOmTib+4SDS5kDJkymZW6vSnu3B6kdk67QCHsbAs76+Mzt7VYC+CfdqAeDX0=
+  </data>
+ </layer>
+ <objectgroup id="5" name="objects">
+  <object id="1" name="cameraStartLocation" x="41" y="491">
+   <point/>
+  </object>
+ </objectgroup>
+</map>
