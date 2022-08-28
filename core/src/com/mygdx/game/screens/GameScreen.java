@@ -140,7 +140,7 @@ public class GameScreen implements Screen {
         mapRenderer.render(l1);
 
         physx.step();
-        physx.debugDraw(camera);
+//        physx.debugDraw(camera);
 
     }
 
