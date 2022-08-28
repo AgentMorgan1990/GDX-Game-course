@@ -88,9 +88,9 @@ public class GameScreen implements Screen {
     public void render(float delta) {
 
         //Управление персонажем
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) body.applyForceToCenter (new Vector2(-10000, 0), true);
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) body.applyForceToCenter (new Vector2(10000, 0), true);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) body.applyForceToCenter (new Vector2(0, 100000), true);
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) body.applyForceToCenter (new Vector2(-100000, 0), true);
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) body.applyForceToCenter (new Vector2(100000, 0), true);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) body.applyForceToCenter (new Vector2(0, 1000000), true);
 
         //Управление зумом
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) camera.zoom += 0.01f;
