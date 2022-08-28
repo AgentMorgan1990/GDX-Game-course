@@ -23,9 +23,7 @@ import com.mygdx.game.Physics;
 
 public class GameScreen implements Screen {
     private final SpriteBatch batch;
-//    private boolean movementRight = true;
-    private boolean turned = false;
-//    private int positionX = 0;
+    private boolean animationDirectionRight = true;
     private final Anim walkAnim;
     private final Anim idleAnim;
     private final Anim jumpAnim;
@@ -96,13 +94,11 @@ public class GameScreen implements Screen {
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) camera.zoom += 0.01f;
         if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT) && camera.zoom > 0) camera.zoom -= 0.01f;
 
-
         camera.position.x = body.getPosition().x;
         camera.position.y = body.getPosition().y;
         camera.update();
 
         ScreenUtils.clear(0, 0, 0, 1);
-
 
         walkAnim.setTime(Gdx.graphics.getDeltaTime());
         idleAnim.setTime(Gdx.graphics.getDeltaTime());
@@ -117,18 +113,20 @@ public class GameScreen implements Screen {
         heroRect.x = body.getPosition().x - heroRect.width / 2;
         heroRect.y = body.getPosition().y - heroRect.height / 2;
 
+        defineAnimationDirection();
         batch.begin();
-        if (body.getLinearVelocity().y > 2 || body.getLinearVelocity().y < -2) {
-            updateAnimationDirection(jumpAnim, body);
+        if (body.getLinearVelocity().y > 60) {
+            updateAnimationDirection(jumpAnim);
             batch.draw(jumpAnim.getFrame(), heroRect.x, heroRect.y, heroRect.width, heroRect.height);
         } else if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
-            updateAnimationDirection(attackAnim, body);
+            updateAnimationDirection(attackAnim);
             batch.draw(attackAnim.getFrame(), heroRect.x, heroRect.y, heroRect.width, heroRect.height);
-        } else if (body.getLinearVelocity().x != 0) {
-            updateAnimationDirection(walkAnim, body);
+        } else if (body.getLinearVelocity().x <= -10 ||body.getLinearVelocity().x > 10) {
+            updateAnimationDirection(walkAnim);
             batch.draw(walkAnim.getFrame(), heroRect.x, heroRect.y, heroRect.width, heroRect.height);
             //todo определить условия получения урона и прописать отрисовку hitAnim сюда
         } else {
+            updateAnimationDirection(idleAnim);
             batch.draw(idleAnim.getFrame(), heroRect.x, heroRect.y, heroRect.width, heroRect.height);
         }
         batch.end();
@@ -176,12 +174,21 @@ public class GameScreen implements Screen {
         this.physx.dispose();
     }
 
-    private void updateAnimationDirection(Anim anim, Body body) {
-        if (!anim.getFrame().isFlipX() && body.getLinearVelocity().x < 0) {
+    private void updateAnimationDirection(Anim anim) {
+        if (!anim.getFrame().isFlipX() && !animationDirectionRight){
             anim.getFrame().flip(true, false);
         }
-        if (anim.getFrame().isFlipX() && body.getLinearVelocity().x > 0) {
+        if (anim.getFrame().isFlipX() && animationDirectionRight){
             anim.getFrame().flip(true, false);
+        }
+    }
+
+    private void defineAnimationDirection() {
+        if (body.getLinearVelocity().x <= -10) {
+            animationDirectionRight = false;
+        }
+        if (body.getLinearVelocity().x > 10) {
+            animationDirectionRight = true;
         }
     }
 }
