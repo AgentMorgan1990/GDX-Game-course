@@ -29,14 +29,14 @@ public class Anim {
             }
         }
 
-        this.animation = new Animation<TextureRegion>(1 / 30f, regions);
+        this.animation = new Animation<TextureRegion>(1 / 5f, regions);
         this.animation.setPlayMode(playMode);
         time += Gdx.graphics.getDeltaTime();
     }
-    public Anim(String atlasName, Animation.PlayMode playMode) {
+    public Anim(String atlasName, Animation.PlayMode playMode,String action) {
 
         atlas = new TextureAtlas(atlasName);
-        animation = new Animation<TextureRegion>(1/10f, atlas.findRegions("Went"));
+        animation = new Animation<TextureRegion>(1/5f, atlas.findRegions(action));
         animation.setPlayMode(playMode);
 
         time += Gdx.graphics.getDeltaTime();
