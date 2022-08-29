@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.1" orientation="orthogonal" renderorder="right-down" width="500" height="35" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="57">
+<map version="1.9" tiledversion="1.9.1" orientation="orthogonal" renderorder="right-down" width="500" height="35" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="60">
  <tileset firstgid="1" name="Набор" tilewidth="16" tileheight="16" tilecount="840" columns="20">
   <image source="Retro-Lines-Tiles-transparent.png" trans="000000" width="320" height="672"/>
  </tileset>
@@ -341,6 +341,14 @@
     <property name="gravityScale" type="float" value="40"/>
     <property name="restitution" type="float" value="0"/>
    </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="8" name="events">
+  <object id="58" name="right_boarder" x="896" y="270">
+   <point/>
+  </object>
+  <object id="59" name="left_boarder" x="658" y="270">
+   <point/>
   </object>
  </objectgroup>
  <layer id="4" name="layer_1" width="500" height="35">

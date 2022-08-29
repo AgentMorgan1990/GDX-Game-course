@@ -24,6 +24,8 @@ import com.mygdx.game.Physics;
 public class GameScreen implements Screen {
     private final SpriteBatch batch;
     private boolean animationDirectionRight = true;
+
+    private boolean snakeAnimationDirectionRight = true;
     private final Anim walkAnim;
     private final Anim idleAnim;
     private final Anim jumpAnim;
@@ -37,10 +39,13 @@ public class GameScreen implements Screen {
     private Physics physx;
     private final int[] bg;
     private final int[] l1;
-    private Body heroBody;
-    private Body snakeBody;
+    private final Body heroBody;
+    private final Body snakeBody;
     private final Rectangle heroRect;
     private final Rectangle snakeRect;
+
+    private final RectangleMapObject leftSnakeBoarder;
+    private final RectangleMapObject rightSnakeBoarder;
 
     public GameScreen(Main game) {
 
@@ -73,6 +78,9 @@ public class GameScreen implements Screen {
         //инициализация физики и загрузка героя и объектов
         physx = new Physics();
 
+        leftSnakeBoarder = (RectangleMapObject) map.getLayers().get("events").getObjects().get("left_boarder");
+        rightSnakeBoarder = (RectangleMapObject) map.getLayers().get("events").getObjects().get("right_boarder");
+
         RectangleMapObject tmp = (RectangleMapObject) map.getLayers().get("persons").getObjects().get("hero");
         heroRect = tmp.getRectangle();
         heroBody = physx.addObject(tmp);
@@ -95,8 +103,22 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
 
-        //todo добавить управление искусственным интеллектом врагов
-        snakeBody.applyForceToCenter(new Vector2(-23000,0),true);
+        //todo вынести управление врагами в отдельный класс
+
+        if (snakeBody.getPosition().x <= leftSnakeBoarder.getRectangle().x) {
+            snakeAnimationDirectionRight = false;
+        }
+        if (snakeBody.getPosition().x >= rightSnakeBoarder.getRectangle().x) {
+            snakeAnimationDirectionRight = true;
+        }
+
+        if ((snakeBody.getPosition().x > leftSnakeBoarder.getRectangle().x) && snakeAnimationDirectionRight) {
+            snakeBody.applyForceToCenter(new Vector2(-23000, 0), true);
+        }
+
+        if ((snakeBody.getPosition().x < rightSnakeBoarder.getRectangle().x) && !snakeAnimationDirectionRight) {
+            snakeBody.applyForceToCenter(new Vector2(23000, 0), true);
+        }
 
         //Управление персонажем
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) heroBody.applyForceToCenter (new Vector2(-100000, 0), true);
@@ -136,20 +158,21 @@ public class GameScreen implements Screen {
         defineAnimationDirection();
         batch.begin();
 
+        updateAnimationDirection(snakeMoveAnim,snakeAnimationDirectionRight);
         batch.draw(snakeMoveAnim.getFrame(),snakeRect.x, snakeRect.y, snakeRect.width, snakeRect.height);
 
         if (heroBody.getLinearVelocity().y > 60) {
-            updateAnimationDirection(jumpAnim);
+            updateAnimationDirection(jumpAnim,animationDirectionRight);
             batch.draw(jumpAnim.getFrame(), heroRect.x, heroRect.y, heroRect.width, heroRect.height);
         } else if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
-            updateAnimationDirection(attackAnim);
+            updateAnimationDirection(attackAnim,animationDirectionRight);
             batch.draw(attackAnim.getFrame(), heroRect.x, heroRect.y, heroRect.width, heroRect.height);
         } else if (heroBody.getLinearVelocity().x <= -10 || heroBody.getLinearVelocity().x > 10) {
-            updateAnimationDirection(walkAnim);
+            updateAnimationDirection(walkAnim,animationDirectionRight);
             batch.draw(walkAnim.getFrame(), heroRect.x, heroRect.y, heroRect.width, heroRect.height);
             //todo определить условия получения урона и прописать отрисовку hitAnim сюда
         } else {
-            updateAnimationDirection(idleAnim);
+            updateAnimationDirection(idleAnim,animationDirectionRight);
             batch.draw(idleAnim.getFrame(), heroRect.x, heroRect.y, heroRect.width, heroRect.height);
         }
         batch.end();
@@ -198,7 +221,7 @@ public class GameScreen implements Screen {
         this.snakeMoveAnim.dispose();
     }
 
-    private void updateAnimationDirection(Anim anim) {
+    private void updateAnimationDirection(Anim anim,boolean animationDirectionRight) {
         if (!anim.getFrame().isFlipX() && !animationDirectionRight){
             anim.getFrame().flip(true, false);
         }
