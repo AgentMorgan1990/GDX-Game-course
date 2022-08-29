@@ -29,6 +29,7 @@ public class GameScreen implements Screen {
     private final Anim jumpAnim;
     private final Anim hitAnim;
     private final Anim attackAnim;
+    private  final Anim snakeMoveAnim;
     private final Main game;
     private final Texture bulletImage;
     private final OrthographicCamera camera;
@@ -36,8 +37,10 @@ public class GameScreen implements Screen {
     private Physics physx;
     private final int[] bg;
     private final int[] l1;
-    private Body body;
+    private Body heroBody;
+    private Body snakeBody;
     private final Rectangle heroRect;
+    private final Rectangle snakeRect;
 
     public GameScreen(Main game) {
 
@@ -51,6 +54,7 @@ public class GameScreen implements Screen {
         jumpAnim = new Anim("atlas/Hero.atlas", Animation.PlayMode.LOOP,"Jump");
         hitAnim = new Anim("atlas/Hero.atlas", Animation.PlayMode.LOOP,"Hit");
         attackAnim = new Anim("atlas/Hero.atlas", Animation.PlayMode.LOOP,"Attack");
+        snakeMoveAnim = new Anim("atlas/Snake.atlas", Animation.PlayMode.LOOP,"Snake_move");
 
         bulletImage = new Texture("bullet.png");
 
@@ -68,9 +72,15 @@ public class GameScreen implements Screen {
 
         //инициализация физики и загрузка героя и объектов
         physx = new Physics();
+
         RectangleMapObject tmp = (RectangleMapObject) map.getLayers().get("persons").getObjects().get("hero");
         heroRect = tmp.getRectangle();
-        body = physx.addObject(tmp);
+        heroBody = physx.addObject(tmp);
+
+        RectangleMapObject tmp1 = (RectangleMapObject) map.getLayers().get("persons").getObjects().get("snake");
+        snakeRect = tmp1.getRectangle();
+        snakeBody = physx.addObject(tmp1);
+
         Array<RectangleMapObject> objects = map.getLayers().get("objects").getObjects().getByType(RectangleMapObject.class);
         for (int i = 0; i < objects.size; i++) {
             physx.addObject(objects.get(i));
@@ -85,17 +95,20 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
 
+        //todo добавить управление искусственным интеллектом врагов
+        snakeBody.applyForceToCenter(new Vector2(-23000,0),true);
+
         //Управление персонажем
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) body.applyForceToCenter (new Vector2(-100000, 0), true);
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) body.applyForceToCenter (new Vector2(100000, 0), true);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) body.applyForceToCenter (new Vector2(0, 1000000), true);
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) heroBody.applyForceToCenter (new Vector2(-100000, 0), true);
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) heroBody.applyForceToCenter (new Vector2(100000, 0), true);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) heroBody.applyForceToCenter (new Vector2(0, 10000000), true);
 
         //Управление зумом
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) camera.zoom += 0.01f;
         if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT) && camera.zoom > 0) camera.zoom -= 0.01f;
 
-        camera.position.x = body.getPosition().x;
-        camera.position.y = body.getPosition().y;
+        camera.position.x = heroBody.getPosition().x;
+        camera.position.y = heroBody.getPosition().y;
         camera.update();
 
         ScreenUtils.clear(0, 0, 0, 1);
@@ -105,23 +118,33 @@ public class GameScreen implements Screen {
         jumpAnim.setTime(Gdx.graphics.getDeltaTime());
         hitAnim.setTime(Gdx.graphics.getDeltaTime());
         attackAnim.setTime(Gdx.graphics.getDeltaTime());
+        snakeMoveAnim.setTime(Gdx.graphics.getDeltaTime());
 
         mapRenderer.setView(camera);
         mapRenderer.render(bg);
 
         batch.setProjectionMatrix(camera.combined);
-        heroRect.x = body.getPosition().x - heroRect.width / 2;
-        heroRect.y = body.getPosition().y - heroRect.height / 2;
+
+        heroRect.x = heroBody.getPosition().x - heroRect.width / 2;
+        heroRect.y = heroBody.getPosition().y - heroRect.height / 2;
+
+        snakeRect.x = snakeBody.getPosition().x - snakeRect.width / 2;
+        snakeRect.y = snakeBody.getPosition().y - snakeRect.height / 2;
+
+
 
         defineAnimationDirection();
         batch.begin();
-        if (body.getLinearVelocity().y > 60) {
+
+        batch.draw(snakeMoveAnim.getFrame(),snakeRect.x, snakeRect.y, snakeRect.width, snakeRect.height);
+
+        if (heroBody.getLinearVelocity().y > 60) {
             updateAnimationDirection(jumpAnim);
             batch.draw(jumpAnim.getFrame(), heroRect.x, heroRect.y, heroRect.width, heroRect.height);
         } else if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
             updateAnimationDirection(attackAnim);
             batch.draw(attackAnim.getFrame(), heroRect.x, heroRect.y, heroRect.width, heroRect.height);
-        } else if (body.getLinearVelocity().x <= -10 ||body.getLinearVelocity().x > 10) {
+        } else if (heroBody.getLinearVelocity().x <= -10 || heroBody.getLinearVelocity().x > 10) {
             updateAnimationDirection(walkAnim);
             batch.draw(walkAnim.getFrame(), heroRect.x, heroRect.y, heroRect.width, heroRect.height);
             //todo определить условия получения урона и прописать отрисовку hitAnim сюда
@@ -172,6 +195,7 @@ public class GameScreen implements Screen {
         this.attackAnim.dispose();
         this.bulletImage.dispose();
         this.physx.dispose();
+        this.snakeMoveAnim.dispose();
     }
 
     private void updateAnimationDirection(Anim anim) {
@@ -184,10 +208,10 @@ public class GameScreen implements Screen {
     }
 
     private void defineAnimationDirection() {
-        if (body.getLinearVelocity().x <= -10) {
+        if (heroBody.getLinearVelocity().x <= -10) {
             animationDirectionRight = false;
         }
-        if (body.getLinearVelocity().x > 10) {
+        if (heroBody.getLinearVelocity().x > 10) {
             animationDirectionRight = true;
         }
     }
