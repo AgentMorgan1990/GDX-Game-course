@@ -11,7 +11,35 @@ public class Physics {
     private final Box2DDebugRenderer debugRenderer;
     public Physics() {
         world = new World(new Vector2(0.0f, -9.8f), true);
+        world.setContactListener(new MyContactList());
         debugRenderer = new Box2DDebugRenderer();
+    }
+
+    public void destroyBody(Body body) {
+        //todo если удалять тела, то приложение падает
+//        world.destroyBody(body);
+    }
+    public Body createBullet(Rectangle rectangle){
+        BodyDef def = new BodyDef();
+        FixtureDef fdef = new FixtureDef();
+        PolygonShape polygonShape = new PolygonShape();
+        def.type = BodyDef.BodyType.DynamicBody;
+        def.position.set(rectangle.x + rectangle.width/2.0f, rectangle.y + rectangle.height/2.0f);
+        polygonShape.setAsBox(rectangle.width/2.0f, rectangle.height/2.0f);
+        fdef.shape = polygonShape;
+        //сила притяжения
+        def.gravityScale = 0;
+        //трение
+        fdef.friction = 1;
+        //плотность
+        fdef.density = 10;
+        //упругость
+        fdef.restitution = 0;
+        Body body;
+        body = world.createBody(def);
+        body.createFixture(fdef).setUserData("bullet");
+        polygonShape.dispose();
+        return body;
     }
 
     public Body addObject(RectangleMapObject object) {
@@ -43,7 +71,19 @@ public class Physics {
 
         Body body;
         body = world.createBody(def);
-        body.createFixture(fdef).setUserData("стена");
+        String name = object.getName();
+        body.createFixture(fdef).setUserData(name);
+
+        if (name != null && name.equals("hero")){
+            polygonShape.setAsBox(rect.width/12,rect.height/12,new Vector2(0,-rect.width/2),0);
+            body.createFixture(fdef).setSensor(true);
+            polygonShape.setAsBox(rect.width/12,rect.height/12,new Vector2(0,rect.width/2),0);
+            body.createFixture(fdef).setSensor(true);
+            polygonShape.setAsBox(rect.width/12,rect.height/12,new Vector2(rect.width/2,0),0);
+            body.createFixture(fdef).setSensor(true);
+            polygonShape.setAsBox(rect.width/12,rect.height/12,new Vector2(-rect.width/2,0),0);
+            body.createFixture(fdef).setSensor(true);
+        }
 
         polygonShape.dispose();
         return body;
