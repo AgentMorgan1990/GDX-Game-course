@@ -85,6 +85,17 @@ public class Physics {
             body.createFixture(fdef).setSensor(true);
         }
 
+        if (name != null && name.equals("snake")){
+
+            polygonShape.setAsBox(rect.width/12,rect.height/12,new Vector2(-rect.width/2,-rect.height/2),0);
+            body.createFixture(fdef).setUserData("leftSensor");
+            body.getFixtureList().get(body.getFixtureList().size-1).setSensor(true);
+
+            polygonShape.setAsBox(rect.width/12,rect.height/12,new Vector2(rect.width/2,-rect.height/2),0);
+            body.createFixture(fdef).setUserData("rightSensor");
+            body.getFixtureList().get(body.getFixtureList().size-1).setSensor(true);
+        }
+
         polygonShape.dispose();
         return body;
     }

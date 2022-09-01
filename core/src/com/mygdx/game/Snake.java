@@ -7,13 +7,12 @@ import com.badlogic.gdx.physics.box2d.Body;
 
 public class Snake {
 
+    private boolean movementDirectionRight;
     private boolean animationDirectionRight;
     private final Anim moveAnimation;
     private final Anim hitAnimation;
     private final Body body;
     private final Rectangle rectangle;
-    private final RectangleMapObject leftSnakeBoarder;
-    private final RectangleMapObject rightSnakeBoarder;
     private int hitPoints;
     private int durationOfHitAnimation;
     private boolean displayHitAnimation;
@@ -28,19 +27,26 @@ public class Snake {
 
     private boolean alive;
 
-    public Snake(Body body, Rectangle rectangle, RectangleMapObject leftSnakeBoarder, RectangleMapObject rightSnakeBoarder) {
+    public Snake(Body body, Rectangle rectangle) {
 
         this.moveAnimation = new Anim("atlas/Snake.atlas", Animation.PlayMode.LOOP, "Snake_move");
         this.hitAnimation = new Anim("atlas/Snake.atlas", Animation.PlayMode.LOOP, "Snake_hit");
-        this.animationDirectionRight = true;
+        this.movementDirectionRight = false;
         this.body = body;
         this.rectangle = rectangle;
-        this.leftSnakeBoarder = leftSnakeBoarder;
-        this.rightSnakeBoarder = rightSnakeBoarder;
         this.alive = true;
         this.hitPoints = 3;
         this.durationOfHitAnimation = 120;
         this.displayHitAnimation = false;
+        this.animationDirectionRight = true;
+    }
+
+    public boolean isAnimationDirectionRight() {
+        return animationDirectionRight;
+    }
+
+    public void setAnimationDirectionRight(boolean animationDirectionRight) {
+        this.animationDirectionRight = animationDirectionRight;
     }
 
     public int getDurationOfHitAnimation() {
@@ -71,12 +77,12 @@ public class Snake {
         this.hitPoints = hitPoints;
     }
 
-    public void setAnimationDirectionRight(boolean animationDirectionRight) {
-        this.animationDirectionRight = animationDirectionRight;
+    public void setMovementDirectionRight(boolean movementDirectionRight) {
+        this.movementDirectionRight = movementDirectionRight;
     }
 
-    public boolean isAnimationDirectionRight() {
-        return animationDirectionRight;
+    public boolean isMovementDirectionRight() {
+        return movementDirectionRight;
     }
 
     public Anim getMoveAnimation() {
@@ -90,15 +96,6 @@ public class Snake {
     public Rectangle getRectangle() {
         return rectangle;
     }
-
-    public RectangleMapObject getLeftSnakeBoarder() {
-        return leftSnakeBoarder;
-    }
-
-    public RectangleMapObject getRightSnakeBoarder() {
-        return rightSnakeBoarder;
-    }
-
     public void dispose() {
         this.moveAnimation.dispose();
     }

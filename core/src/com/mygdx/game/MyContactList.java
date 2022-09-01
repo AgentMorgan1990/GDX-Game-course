@@ -69,6 +69,7 @@ public class MyContactList implements ContactListener {
         Fixture a = contact.getFixtureA();
         Fixture b = contact.getFixtureB();
 
+
         if (a.getUserData() != null && b.getUserData() != null) {
             String tmpA = (String) a.getUserData();
             String tmpB = (String) b.getUserData();
@@ -77,6 +78,31 @@ public class MyContactList implements ContactListener {
             }
             if (tmpB.equals("hero") && tmpA.equals("floor")&&GameScreen.abilityToJump) {
                 GameScreen.abilityToJump = false;
+            }
+        }
+
+        if (a.getUserData() != null && b.getUserData() != null) {
+            String tmpA = (String) a.getUserData();
+            String tmpB = (String) b.getUserData();
+            if (tmpA.equals("floor") && tmpB.equals("leftSensor")) {
+                System.out.println(tmpB);
+                GameScreen.changesSnakeMoveDirection.add(b.getBody());
+            }
+            if (tmpB.equals("floor") && tmpA.equals("leftSensor")) {
+                System.out.println(tmpA);
+                GameScreen.changesSnakeMoveDirection.add(a.getBody());
+            }
+        }
+        if (a.getUserData() != null && b.getUserData() != null) {
+            String tmpA = (String) a.getUserData();
+            String tmpB = (String) b.getUserData();
+            if (tmpA.equals("floor") && tmpB.equals("rightSensor")) {
+                System.out.println(tmpB);
+                GameScreen.changesSnakeMoveDirection.add(b.getBody());
+            }
+            if (tmpB.equals("floor") && tmpA.equals("rightSensor")) {
+                System.out.println(tmpA);
+                GameScreen.changesSnakeMoveDirection.add(a.getBody());
             }
         }
     }
@@ -88,6 +114,5 @@ public class MyContactList implements ContactListener {
 
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {
-
     }
 }

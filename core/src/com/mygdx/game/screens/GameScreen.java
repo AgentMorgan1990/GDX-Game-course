@@ -17,7 +17,9 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 
 public class GameScreen implements Screen {
@@ -33,6 +35,7 @@ public class GameScreen implements Screen {
     private final int[] l1;
     private ArrayList<Bullet> bullets;
     public static ArrayList<Body> bodies;
+    public static Set<Body> changesSnakeMoveDirection;
     public static boolean abilityToJump = false;
 
     public GameScreen(Main game) {
@@ -51,7 +54,11 @@ public class GameScreen implements Screen {
 
         bodies = new ArrayList<>();
         bullets = new ArrayList<>();
+        changesSnakeMoveDirection = new HashSet<>();
         //todo при касании дна персонаж умирает
+        //todo нарисовать экран старта игры с помощью блоков из игры
+        //todo нарисовать game over и restart game
+        //todo упростить добавление змей/врагов
 
         //Инициализация игры и прорисовки
         this.game = game;
@@ -68,9 +75,8 @@ public class GameScreen implements Screen {
         //Инициализация змеи
         RectangleMapObject tmp1 = (RectangleMapObject) map.getLayers().get("persons").getObjects().get("snake");
         snake = new Snake(physx.addObject(tmp1),
-                tmp1.getRectangle(),
-                (RectangleMapObject) map.getLayers().get("events").getObjects().get("left_boarder"),
-                (RectangleMapObject) map.getLayers().get("events").getObjects().get("right_boarder"));
+                tmp1.getRectangle()
+        );
 
         Array<RectangleMapObject> objects = map.getLayers().get("objects").getObjects().getByType(RectangleMapObject.class);
         for (int i = 0; i < objects.size; i++) {
@@ -87,20 +93,21 @@ public class GameScreen implements Screen {
     public void render(float delta) {
 
         //todo вынести управление врагами в отдельный класс
-
-        if (snake.getBody().getPosition().x <= snake.getLeftSnakeBoarder().getRectangle().x) {
-            snake.setAnimationDirectionRight(false);
+        for (Body snakeAction : changesSnakeMoveDirection) {
+            if (snake.isMovementDirectionRight()) {
+                snake.setMovementDirectionRight(false);
+            } else {
+                snake.setMovementDirectionRight(true);
+            }
         }
-        if (snake.getBody().getPosition().x >= snake.getRightSnakeBoarder().getRectangle().x) {
-            snake.setAnimationDirectionRight(true);
+        changesSnakeMoveDirection.clear();
+
+        if (!snake.isMovementDirectionRight() && snake.getBody().getLinearVelocity().x > -20) {
+            snake.getBody().applyForceToCenter(new Vector2(-20000, 0), true);
         }
 
-        if ((snake.getBody().getPosition().x > snake.getLeftSnakeBoarder().getRectangle().x) && snake.isAnimationDirectionRight()) {
-            snake.getBody().applyForceToCenter(new Vector2(-23000, 0), true);
-        }
-
-        if ((snake.getBody().getPosition().x < snake.getRightSnakeBoarder().getRectangle().x) && !snake.isAnimationDirectionRight()) {
-            snake.getBody().applyForceToCenter(new Vector2(23000, 0), true);
+        if (snake.isMovementDirectionRight() && snake.getBody().getLinearVelocity().x < 20) {
+            snake.getBody().applyForceToCenter(new Vector2(20000, 0), true);
         }
 
         //Управление персонажем
@@ -152,15 +159,16 @@ public class GameScreen implements Screen {
 
         hero.updateRectanglePosition();
 
-        defineAnimationDirection();
+        hero.setAnimationDirectionRight(defineAnimationDirectionRight(hero.getBody(), hero.isAnimationDirectionRight()));
+        snake.setAnimationDirectionRight(defineAnimationDirectionRight(snake.getBody(), snake.isAnimationDirectionRight()));
         batch.begin();
 
 
         if (snake.isAlive()) {
             snake.updateRectanglePosition();
             snake.setTimeToAnimation(Gdx.graphics.getDeltaTime());
-            updateAnimationDirection(snake.getMoveAnimation(), snake.isAnimationDirectionRight());
-            updateAnimationDirection(snake.getHitAnimation(), snake.isAnimationDirectionRight());
+            updateAnimationDirectionForLeftPicture(snake.getMoveAnimation(), snake.isAnimationDirectionRight());
+            updateAnimationDirectionForLeftPicture(snake.getHitAnimation(), snake.isAnimationDirectionRight());
             if (snake.getDurationOfHitAnimation() <= 0) {
                 snake.setDurationOfHitAnimation(120);
                 snake.setDisplayHitAnimation(false);
@@ -195,20 +203,20 @@ public class GameScreen implements Screen {
             hero.setDisplayHitAnimation(false);
         }
         if (hero.isDisplayHitAnimation() && hero.getDurationOfHitAnimation() >= 0) {
-            updateAnimationDirection(hero.getHitAnim(), hero.isAnimationDirectionRight());
+            updateAnimationDirectionForRightPicture(hero.getHitAnim(), hero.isAnimationDirectionRight());
             batch.draw(hero.getHitAnim().getFrame(), hero.getRectangle().x, hero.getRectangle().y, hero.getRectangle().width, hero.getRectangle().height);
             hero.setDurationOfHitAnimation(hero.getDurationOfHitAnimation() - 1);
         } else if (hero.getBody().getLinearVelocity().y > 60) {
-            updateAnimationDirection(hero.getJumpAnim(), hero.isAnimationDirectionRight());
+            updateAnimationDirectionForRightPicture(hero.getJumpAnim(), hero.isAnimationDirectionRight());
             batch.draw(hero.getJumpAnim().getFrame(), hero.getRectangle().x, hero.getRectangle().y, hero.getRectangle().width, hero.getRectangle().height);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)) {
-            updateAnimationDirection(hero.getAttackAnim(), hero.isAnimationDirectionRight());
+            updateAnimationDirectionForRightPicture(hero.getAttackAnim(), hero.isAnimationDirectionRight());
             batch.draw(hero.getAttackAnim().getFrame(), hero.getRectangle().x, hero.getRectangle().y, hero.getRectangle().width, hero.getRectangle().height);
         } else if (hero.getBody().getLinearVelocity().x <= -10 || hero.getBody().getLinearVelocity().x > 10) {
-            updateAnimationDirection(hero.getWalkAnim(), hero.isAnimationDirectionRight());
+            updateAnimationDirectionForRightPicture(hero.getWalkAnim(), hero.isAnimationDirectionRight());
             batch.draw(hero.getWalkAnim().getFrame(), hero.getRectangle().x, hero.getRectangle().y, hero.getRectangle().width, hero.getRectangle().height);
         } else {
-            updateAnimationDirection(hero.getIdleAnim(), hero.isAnimationDirectionRight());
+            updateAnimationDirectionForRightPicture(hero.getIdleAnim(), hero.isAnimationDirectionRight());
             batch.draw(hero.getIdleAnim().getFrame(), hero.getRectangle().x, hero.getRectangle().y, hero.getRectangle().width, hero.getRectangle().height);
         }
         batch.end();
@@ -261,7 +269,7 @@ public class GameScreen implements Screen {
             dispose();
             game.setScreen(new GameOverScreen(game));
         }
-//        physx.debugDraw(camera);
+        physx.debugDraw(camera);
 
     }
 
@@ -299,7 +307,7 @@ public class GameScreen implements Screen {
 
     }
 
-    private void updateAnimationDirection(Anim anim, boolean animationDirectionRight) {
+    private void updateAnimationDirectionForRightPicture(Anim anim, boolean animationDirectionRight) {
         if (!anim.getFrame().isFlipX() && !animationDirectionRight) {
             anim.getFrame().flip(true, false);
         }
@@ -307,13 +315,23 @@ public class GameScreen implements Screen {
             anim.getFrame().flip(true, false);
         }
     }
+    private void updateAnimationDirectionForLeftPicture(Anim anim, boolean animationDirectionRight) {
+        if (anim.getFrame().isFlipX() && !animationDirectionRight) {
+            anim.getFrame().flip(true, false);
+        }
+        if (!anim.getFrame().isFlipX() && animationDirectionRight) {
+            anim.getFrame().flip(true, false);
+        }
+    }
 
-    private void defineAnimationDirection() {
-        if (hero.getBody().getLinearVelocity().x <= -10) {
-            hero.setAnimationDirectionRight(false);
+    private boolean defineAnimationDirectionRight(Body body, boolean animationDirection) {
+        boolean animationDirectionRight = animationDirection;
+        if (body.getLinearVelocity().x <= -10) {
+            animationDirectionRight = false;
         }
-        if (hero.getBody().getLinearVelocity().x > 10) {
-            hero.setAnimationDirectionRight(true);
+        if (body.getLinearVelocity().x > 10) {
+            animationDirectionRight = true;
         }
+        return animationDirectionRight;
     }
 }
