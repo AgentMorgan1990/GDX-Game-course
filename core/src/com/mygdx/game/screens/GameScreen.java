@@ -16,11 +16,10 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.*;
+import com.mygdx.game.services.AnimationService;
+import com.mygdx.game.services.ContactProcessingService;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
 
 public class GameScreen implements Screen {
@@ -35,10 +34,6 @@ public class GameScreen implements Screen {
     private final int[] l1;
     private final Texture lifeImage;
     private ArrayList<Bullet> bullets;
-    public static ArrayList<Body> bodies;
-    public static Set<Body> changesHikingEnemyMoveDirection;
-    public static ArrayList<Body> reductionHealthPointContacts;
-    public static ArrayList<Body> destroyContact;
     public static boolean abilityToJump = false;
     private ArrayList<Snake> snakes;
 
@@ -56,12 +51,8 @@ public class GameScreen implements Screen {
         l1[0] = map.getLayers().getIndex("layer_1");
         this.lifeImage = new Texture("life.png");
 
-        bodies = new ArrayList<>();
         bullets = new ArrayList<>();
         snakes = new ArrayList<>();
-        changesHikingEnemyMoveDirection = new HashSet<>();
-        reductionHealthPointContacts = new ArrayList<>();
-        destroyContact = new ArrayList<>();
 
         //todo нарисовать экран старта игры с помощью блоков из игры
         //todo нарисовать game over и restart game
@@ -100,10 +91,10 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
 
-
-        executeChangesHikingEnemyMoveDirection();
-        executeReductionHealthPointContacts();
-        executeDestroyContacts();
+        //Обработка контактов
+        ContactProcessingService.executeChangesHikingEnemyMoveDirection(snakes);
+        ContactProcessingService.executeReductionHealthPointContacts(snakes,hero);
+        ContactProcessingService.executeDestroyContacts(snakes,bullets,hero);
 
 
         //управление врагами
@@ -143,39 +134,13 @@ public class GameScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
 
 
-        hero.setTimeToAnimation(Gdx.graphics.getDeltaTime());
+        //Обновление данных объектов по анимации
         hero.updateRectanglePosition();
-        hero.setAnimationDirectionRight(defineAnimationDirectionRight(hero.getBody(), hero.isAnimationDirectionRight()));
-        updateAnimationDirectionForRightPicture(hero.getHitAnim(), hero.isAnimationDirectionRight());
-        updateAnimationDirectionForRightPicture(hero.getJumpAnim(), hero.isAnimationDirectionRight());
-        updateAnimationDirectionForRightPicture(hero.getAttackAnim(), hero.isAnimationDirectionRight());
-        updateAnimationDirectionForRightPicture(hero.getWalkAnim(), hero.isAnimationDirectionRight());
-        updateAnimationDirectionForRightPicture(hero.getIdleAnim(), hero.isAnimationDirectionRight());
-
-        if (hero.isDisplayHitAnimation()) {
-            hero.setDurationOfHitAnimation(hero.getDurationOfHitAnimation() - 1);
-        }
-        if (hero.getDurationOfHitAnimation() <= 0) {
-            hero.setDurationOfHitAnimation(120);
-            hero.setDisplayHitAnimation(false);
-        }
-
+        AnimationService.updateHeroAnimation(hero);
 
         for (Snake snake : snakes) {
             snake.updateRectanglePosition();
-            snake.setAnimationDirectionRight(defineAnimationDirectionRight(snake.getBody(), snake.isAnimationDirectionRight()));
-            snake.setTimeToAnimation(Gdx.graphics.getDeltaTime());
-            updateAnimationDirectionForLeftPicture(snake.getMoveAnimation(), snake.isAnimationDirectionRight());
-            updateAnimationDirectionForLeftPicture(snake.getHitAnimation(), snake.isAnimationDirectionRight());
-
-
-            if (snake.isDisplayHitAnimation()) {
-                snake.setDurationOfHitAnimation(hero.getDurationOfHitAnimation() - 1);
-            }
-            if (snake.getDurationOfHitAnimation() <= 0) {
-                snake.setDurationOfHitAnimation(120);
-                snake.setDisplayHitAnimation(false);
-            }
+            AnimationService.updateSnakeAnimation(snake);
         }
 
         for (Bullet bullet : bullets) {
@@ -184,7 +149,7 @@ public class GameScreen implements Screen {
             if (bullet.getBulletLifeTime() <= 0) {
                 bullet.setAlive(false);
                 bullet.getBody().setActive(false);
-                destroyContact.add(bullet.getBody());
+                ContactProcessingService.destroyContact.add(bullet.getBody());
             }
         }
 
@@ -192,36 +157,19 @@ public class GameScreen implements Screen {
 
         //отрисовка змей
         for (Snake snake : snakes) {
-            if (snake.isAlive()) {
-                if (snake.isDisplayHitAnimation() && snake.isDisplayHitAnimation()) {
-                    batch.draw(snake.getHitAnimation().getFrame(), snake.getRectangle().x, snake.getRectangle().y, snake.getRectangle().width, snake.getRectangle().height);
-                } else {
-                    batch.draw(snake.getMoveAnimation().getFrame(), snake.getRectangle().x, snake.getRectangle().y, snake.getRectangle().width, snake.getRectangle().height);
-                }
-            }
+            batch.draw(snake.getTextureRegion(), snake.getRectangle().x, snake.getRectangle().y, snake.getRectangle().width, snake.getRectangle().height);
         }
 
         //отрисовка пуль
         for (Bullet bullet : bullets) {
-                batch.draw(bullet.getTexture(), bullet.getRectangle().x, bullet.getRectangle().y,
-                        bullet.getRectangle().width, bullet.getRectangle().height);
+            batch.draw(bullet.getTexture(), bullet.getRectangle().x, bullet.getRectangle().y, bullet.getRectangle().width, bullet.getRectangle().height);
         }
 
         //отрисовка персонажа
-        if (hero.isDisplayHitAnimation() && hero.isDisplayHitAnimation()) {
-            batch.draw(hero.getHitAnim().getFrame(), hero.getRectangle().x, hero.getRectangle().y, hero.getRectangle().width, hero.getRectangle().height);
-        } else if (hero.getBody().getLinearVelocity().y > 60) {
-            batch.draw(hero.getJumpAnim().getFrame(), hero.getRectangle().x, hero.getRectangle().y, hero.getRectangle().width, hero.getRectangle().height);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)) {
-            batch.draw(hero.getAttackAnim().getFrame(), hero.getRectangle().x, hero.getRectangle().y, hero.getRectangle().width, hero.getRectangle().height);
-        } else if (hero.getBody().getLinearVelocity().x <= -10 || hero.getBody().getLinearVelocity().x > 10) {
-            batch.draw(hero.getWalkAnim().getFrame(), hero.getRectangle().x, hero.getRectangle().y, hero.getRectangle().width, hero.getRectangle().height);
-        } else {
-            batch.draw(hero.getIdleAnim().getFrame(), hero.getRectangle().x, hero.getRectangle().y, hero.getRectangle().width, hero.getRectangle().height);
-        }
+        batch.draw(hero.getTextureRegion(), hero.getRectangle().x, hero.getRectangle().y, hero.getRectangle().width, hero.getRectangle().height);
 
         //отрисовка кол-ва жизней
-        for (int i = 0; i < hero.getHitPoint(); i++) {
+        for (int i = 0; i < hero.getHealthPoints(); i++) {
             batch.draw(lifeImage, hero.getBody().getPosition().x - (camera.viewportWidth * camera.zoom) / 4 + (i * lifeImage.getWidth()), hero.getBody().getPosition().y + (camera.viewportWidth * camera.zoom) / 5, lifeImage.getWidth(), lifeImage.getHeight());
         }
 
@@ -240,10 +188,10 @@ public class GameScreen implements Screen {
             dispose();
             game.setScreen(new GameOverScreen(game));
         }
-        //todo дописать Screen победы
+
         if (snakes.isEmpty()) {
             dispose();
-            game.setScreen(new MenuScreen(game));
+            game.setScreen(new WinScreen(game));
         }
 //        physx.debugDraw(camera);
 
@@ -284,36 +232,6 @@ public class GameScreen implements Screen {
         }
         this.lifeImage.dispose();
     }
-
-    private void updateAnimationDirectionForRightPicture(Anim anim, boolean animationDirectionRight) {
-        if (!anim.getFrame().isFlipX() && !animationDirectionRight) {
-            anim.getFrame().flip(true, false);
-        }
-        if (anim.getFrame().isFlipX() && animationDirectionRight) {
-            anim.getFrame().flip(true, false);
-        }
-    }
-
-    private void updateAnimationDirectionForLeftPicture(Anim anim, boolean animationDirectionRight) {
-        if (anim.getFrame().isFlipX() && !animationDirectionRight) {
-            anim.getFrame().flip(true, false);
-        }
-        if (!anim.getFrame().isFlipX() && animationDirectionRight) {
-            anim.getFrame().flip(true, false);
-        }
-    }
-
-    private boolean defineAnimationDirectionRight(Body body, boolean animationDirection) {
-        boolean animationDirectionRight = animationDirection;
-        if (body.getLinearVelocity().x <= -10) {
-            animationDirectionRight = false;
-        }
-        if (body.getLinearVelocity().x > 10) {
-            animationDirectionRight = true;
-        }
-        return animationDirectionRight;
-    }
-
     private void createBullet() {
         Rectangle rectangle = new Rectangle();
         rectangle.setSize(4, 4);
@@ -331,79 +249,5 @@ public class GameScreen implements Screen {
             bulletBody.applyForceToCenter(new Vector2(-10000000, 0), true);
         }
         bullets.add(new Bullet(bulletBody, rectangle));
-    }
-
-    private void executeDestroyContacts() {
-        for (Body body : destroyContact) {
-
-            Iterator<Snake> snakeIterator = snakes.iterator();
-            while (snakeIterator.hasNext()) {
-                Snake snake = snakeIterator.next();
-                if (snake.getBody().equals(body)) {
-                    body.setActive(false);
-                    snake.setAlive(false);
-                    snakeIterator.remove();
-                }
-            }
-
-            Iterator<Bullet> bulletIterator = bullets.iterator();
-            while (bulletIterator.hasNext()) {
-                Bullet bullet = bulletIterator.next();
-                if (bullet.getBody().equals(body)) {
-                    bullet.setAlive(false);
-                    body.setActive(false);
-                    bulletIterator.remove();
-                }
-            }
-            if (hero.getBody().equals(body)) {
-                hero.setAlive(false);
-            }
-
-        }
-        destroyContact.clear();
-    }
-
-    private void executeReductionHealthPointContacts() {
-
-        for (Body body : reductionHealthPointContacts) {
-            for (Snake snake : snakes) {
-                if (snake.getBody().equals(body)) {
-                    snake.setDisplayHitAnimation(true);
-                    snake.setHitPoints(snake.getHitPoints() - 1);
-                    if (snake.getHitPoints() <= 0) {
-                        destroyContact.add(body);
-                    }
-                }
-            }
-            if (hero.getBody().equals(body)) {
-                if (hero.isAnimationDirectionRight()){
-                    hero.getBody().applyForceToCenter(new Vector2(-1000000, 1000000), true);
-                } else {
-                    hero.getBody().applyForceToCenter(new Vector2(1000000, 1000000), true);
-                }
-
-                hero.setDisplayHitAnimation(true);
-                hero.setHitPoint(hero.getHitPoint() - 1);
-                if (hero.getHitPoint() <= 0) {
-                    hero.setAlive(false);
-                }
-            }
-        }
-        reductionHealthPointContacts.clear();
-    }
-
-    private void executeChangesHikingEnemyMoveDirection() {
-        for (Body snakeAction : changesHikingEnemyMoveDirection) {
-            for (Snake snake : snakes) {
-                if (snakeAction.equals(snake.getBody())) {
-                    if (snake.isMovementDirectionRight()) {
-                        snake.setMovementDirectionRight(false);
-                    } else {
-                        snake.setMovementDirectionRight(true);
-                    }
-                }
-            }
-        }
-        changesHikingEnemyMoveDirection.clear();
     }
 }

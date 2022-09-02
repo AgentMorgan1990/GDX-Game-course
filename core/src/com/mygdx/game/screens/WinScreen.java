@@ -12,20 +12,18 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.Main;
 
-public class GameOverScreen implements Screen {
-
-
+public class WinScreen implements Screen {
     private final Main game;
     private final SpriteBatch batch;
     private final Texture img;
     private final Rectangle startRect;
     private final ShapeRenderer shapeRenderer;
 
-    public GameOverScreen(Main game){
+    public WinScreen(Main game){
         this.game = game;
         batch = new SpriteBatch();
 
-        Pixmap fullSize = new Pixmap(Gdx.files.internal("game_over.jpg"));
+        Pixmap fullSize = new Pixmap(Gdx.files.internal("win.jpg"));
         Pixmap smallSize = new Pixmap(300, 200, fullSize.getFormat());
         smallSize.drawPixmap(fullSize,
                 0, 0, fullSize.getWidth(), fullSize.getHeight(),

@@ -70,6 +70,10 @@ public class MenuScreen implements Screen {
                 game.setScreen(new GameScreen(game));
             }
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            dispose();
+            game.setScreen(new GameScreen(game));
+        }
 
     }
 

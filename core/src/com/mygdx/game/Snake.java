@@ -1,7 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 
@@ -13,9 +13,10 @@ public class Snake {
     private final Anim hitAnimation;
     private final Body body;
     private final Rectangle rectangle;
-    private int hitPoints;
+    private int healthPoints;
     private int durationOfHitAnimation;
     private boolean displayHitAnimation;
+    private TextureRegion textureRegion;
 
     public void setAlive(boolean alive) {
         this.alive = alive;
@@ -35,10 +36,18 @@ public class Snake {
         this.body = body;
         this.rectangle = rectangle;
         this.alive = true;
-        this.hitPoints = 3;
+        this.healthPoints = 3;
         this.durationOfHitAnimation = 120;
         this.displayHitAnimation = false;
         this.animationDirectionRight = true;
+    }
+
+    public TextureRegion getTextureRegion() {
+        return textureRegion;
+    }
+
+    public void setTextureRegion(TextureRegion textureRegion) {
+        this.textureRegion = textureRegion;
     }
 
     public boolean isAnimationDirectionRight() {
@@ -69,12 +78,12 @@ public class Snake {
         return hitAnimation;
     }
 
-    public int getHitPoints() {
-        return hitPoints;
+    public int getHealthPoints() {
+        return healthPoints;
     }
 
-    public void setHitPoints(int hitPoints) {
-        this.hitPoints = hitPoints;
+    public void setHealthPoints(int healthPoints) {
+        this.healthPoints = healthPoints;
     }
 
     public void setMovementDirectionRight(boolean movementDirectionRight) {
