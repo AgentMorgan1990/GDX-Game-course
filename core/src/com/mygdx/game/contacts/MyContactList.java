@@ -22,6 +22,34 @@ public class MyContactList implements ContactListener {
                 ContactProcessingService.reductionHealthPointContacts.add(a.getBody());
             }
         }
+        if (a.getUserData() != null && b.getUserData() != null) {
+            String tmpA = (String) a.getUserData();
+            String tmpB = (String) b.getUserData();
+            if (tmpA.equals("scorpion") && tmpB.equals("scorpion")) {
+                ContactProcessingService.changesHikingEnemyMoveDirection.add(a.getBody());
+                ContactProcessingService.changesHikingEnemyMoveDirection.add(b.getBody());
+            }
+        }
+        if (a.getUserData() != null && b.getUserData() != null) {
+            String tmpA = (String) a.getUserData();
+            String tmpB = (String) b.getUserData();
+            if (tmpA.equals("bullet") && tmpB.equals("scorpion")) {
+                ContactProcessingService.destroyContact.add(a.getBody());
+                ContactProcessingService.reductionHealthPointContacts.add(b.getBody());
+            }
+            if (tmpB.equals("bullet") && tmpA.equals("scorpion")) {
+                ContactProcessingService.destroyContact.add(b.getBody());
+                ContactProcessingService.reductionHealthPointContacts.add(a.getBody());
+            }
+        }
+        if (a.getUserData() != null && b.getUserData() != null) {
+            String tmpA = (String) a.getUserData();
+            String tmpB = (String) b.getUserData();
+            if (tmpA.equals("snake") && tmpB.equals("snake")) {
+                ContactProcessingService.changesHikingEnemyMoveDirection.add(a.getBody());
+                ContactProcessingService.changesHikingEnemyMoveDirection.add(b.getBody());
+            }
+        }
 
         if (a.getUserData() != null && b.getUserData() != null) {
             String tmpA = (String) a.getUserData();
@@ -70,6 +98,26 @@ public class MyContactList implements ContactListener {
                 ContactProcessingService.destroyContact.add(b.getBody());
             }
             if (tmpB.equals("bottom") && tmpA.equals("snake")) {
+                ContactProcessingService.destroyContact.add(a.getBody());
+            }
+        }
+        if (a.getUserData() != null && b.getUserData() != null) {
+            String tmpA = (String) a.getUserData();
+            String tmpB = (String) b.getUserData();
+            if (tmpA.equals("hero") && tmpB.equals("scorpion")) {
+                ContactProcessingService.reductionHealthPointContacts.add(a.getBody());
+            }
+            if (tmpB.equals("hero") && tmpA.equals("scorpion")) {
+                ContactProcessingService.reductionHealthPointContacts.add(b.getBody());
+            }
+        }
+        if (a.getUserData() != null && b.getUserData() != null) {
+            String tmpA = (String) a.getUserData();
+            String tmpB = (String) b.getUserData();
+            if (tmpA.equals("bottom") && tmpB.equals("scorpion")) {
+                ContactProcessingService.destroyContact.add(b.getBody());
+            }
+            if (tmpB.equals("bottom") && tmpA.equals("scorpion")) {
                 ContactProcessingService.destroyContact.add(a.getBody());
             }
         }

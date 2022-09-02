@@ -16,6 +16,9 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.*;
+import com.mygdx.game.enemies.HikingEnemy;
+import com.mygdx.game.enemies.Scorpion;
+import com.mygdx.game.enemies.Snake;
 import com.mygdx.game.services.AnimationService;
 import com.mygdx.game.services.ContactProcessingService;
 
@@ -24,7 +27,6 @@ import java.util.ArrayList;
 
 public class GameScreen implements Screen {
     private final SpriteBatch batch;
-
     private Hero hero;
     private final Main game;
     private final OrthographicCamera camera;
@@ -35,7 +37,7 @@ public class GameScreen implements Screen {
     private final Texture lifeImage;
     private ArrayList<Bullet> bullets;
     public static boolean abilityToJump = false;
-    private ArrayList<Snake> snakes;
+    private ArrayList<HikingEnemy> hikingEnemies;
 
     public GameScreen(Main game) {
 
@@ -52,11 +54,10 @@ public class GameScreen implements Screen {
         this.lifeImage = new Texture("life.png");
 
         bullets = new ArrayList<>();
-        snakes = new ArrayList<>();
+        hikingEnemies = new ArrayList<>();
 
         //todo нарисовать экран старта игры с помощью блоков из игры
         //todo нарисовать game over и restart game
-        //todo порефачить код
 
         //Инициализация игры и прорисовки
         this.game = game;
@@ -77,10 +78,16 @@ public class GameScreen implements Screen {
         }
 
         //Инициализация змей/врагов
-        Array<RectangleMapObject> snakesObject = map.getLayers().get("enemies").getObjects().getByType(RectangleMapObject.class);
-        for (RectangleMapObject rmo : snakesObject) {
-            Snake snake = new Snake(physx.addObject(rmo), rmo.getRectangle());
-            snakes.add(snake);
+        Array<RectangleMapObject> enemiesObject = map.getLayers().get("enemies").getObjects().getByType(RectangleMapObject.class);
+        for (RectangleMapObject rmo : enemiesObject) {
+            HikingEnemy hikingEnemy = null;
+            if (rmo.getName().equals("snake")) {
+                hikingEnemy = new Snake(physx.addObject(rmo), rmo.getRectangle());
+            }
+            if (rmo.getName().equals("scorpion")){
+                hikingEnemy = new Scorpion(physx.addObject(rmo), rmo.getRectangle());
+            }
+            hikingEnemies.add(hikingEnemy);
         }
     }
 
@@ -92,19 +99,19 @@ public class GameScreen implements Screen {
     public void render(float delta) {
 
         //Обработка контактов
-        ContactProcessingService.executeChangesHikingEnemyMoveDirection(snakes);
-        ContactProcessingService.executeReductionHealthPointContacts(snakes,hero);
-        ContactProcessingService.executeDestroyContacts(snakes,bullets,hero);
+        ContactProcessingService.executeChangesHikingEnemyMoveDirection(hikingEnemies);
+        ContactProcessingService.executeReductionHealthPointContacts(hikingEnemies,hero);
+        ContactProcessingService.executeDestroyContacts(hikingEnemies,bullets,hero);
 
 
         //управление врагами
-        for (Snake snake : snakes) {
-            if (!snake.isMovementDirectionRight() && snake.getBody().getLinearVelocity().x > -20) {
-                snake.getBody().applyForceToCenter(new Vector2(-20000, 0), true);
+        for (HikingEnemy hikingEnemy : hikingEnemies) {
+            if (!hikingEnemy.isMovementDirectionRight() && hikingEnemy.getBody().getLinearVelocity().x > -hikingEnemy.getStepFrequency()) {
+                hikingEnemy.getBody().applyForceToCenter(new Vector2(-hikingEnemy.getMovementSpeed(), 0), true);
             }
 
-            if (snake.isMovementDirectionRight() && snake.getBody().getLinearVelocity().x < 20) {
-                snake.getBody().applyForceToCenter(new Vector2(20000, 0), true);
+            if (hikingEnemy.isMovementDirectionRight() && hikingEnemy.getBody().getLinearVelocity().x < hikingEnemy.getStepFrequency()) {
+                hikingEnemy.getBody().applyForceToCenter(new Vector2(hikingEnemy.getMovementSpeed(), 0), true);
             }
         }
 
@@ -138,9 +145,9 @@ public class GameScreen implements Screen {
         hero.updateRectanglePosition();
         AnimationService.updateHeroAnimation(hero);
 
-        for (Snake snake : snakes) {
-            snake.updateRectanglePosition();
-            AnimationService.updateSnakeAnimation(snake);
+        for (HikingEnemy hikingEnemy : hikingEnemies) {
+            hikingEnemy.updateRectanglePosition();
+            AnimationService.updateHikingEnemyAnimation(hikingEnemy);
         }
 
         for (Bullet bullet : bullets) {
@@ -156,8 +163,8 @@ public class GameScreen implements Screen {
         batch.begin();
 
         //отрисовка змей
-        for (Snake snake : snakes) {
-            batch.draw(snake.getTextureRegion(), snake.getRectangle().x, snake.getRectangle().y, snake.getRectangle().width, snake.getRectangle().height);
+        for (HikingEnemy hikingEnemy : hikingEnemies) {
+            batch.draw(hikingEnemy.getTextureRegion(), hikingEnemy.getRectangle().x, hikingEnemy.getRectangle().y, hikingEnemy.getRectangle().width, hikingEnemy.getRectangle().height);
         }
 
         //отрисовка пуль
@@ -189,7 +196,7 @@ public class GameScreen implements Screen {
             game.setScreen(new GameOverScreen(game));
         }
 
-        if (snakes.isEmpty()) {
+        if (hikingEnemies.isEmpty()) {
             dispose();
             game.setScreen(new WinScreen(game));
         }
@@ -224,8 +231,8 @@ public class GameScreen implements Screen {
         this.batch.dispose();
         this.physx.dispose();
 
-        for (Snake snake : snakes) {
-            snake.dispose();
+        for (HikingEnemy hikingEnemy : hikingEnemies) {
+            hikingEnemy.dispose();
         }
         for (Bullet bullet : bullets) {
             bullet.dispose();

@@ -5,7 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.mygdx.game.Anim;
 import com.mygdx.game.Hero;
-import com.mygdx.game.Snake;
+import com.mygdx.game.enemies.HikingEnemy;
 
 public class AnimationService {
 
@@ -38,23 +38,23 @@ public class AnimationService {
         }
     }
 
-    public static void updateSnakeAnimation(Snake snake) {
-        snake.setAnimationDirectionRight(defineAnimationDirectionRight(snake.getBody(), snake.isAnimationDirectionRight()));
-        snake.setTimeToAnimation(Gdx.graphics.getDeltaTime());
-        updateAnimationDirectionForLeftPicture(snake.getMoveAnimation(), snake.isAnimationDirectionRight());
-        updateAnimationDirectionForLeftPicture(snake.getHitAnimation(), snake.isAnimationDirectionRight());
+    public static void updateHikingEnemyAnimation(HikingEnemy hikingEnemy) {
+        hikingEnemy.setAnimationDirectionRight(defineAnimationDirectionRight(hikingEnemy.getBody(), hikingEnemy.isAnimationDirectionRight()));
+        hikingEnemy.setTimeToAnimation(Gdx.graphics.getDeltaTime());
+        updateAnimationDirectionForLeftPicture(hikingEnemy.getMoveAnimation(), hikingEnemy.isAnimationDirectionRight());
+        updateAnimationDirectionForLeftPicture(hikingEnemy.getHitAnimation(), hikingEnemy.isAnimationDirectionRight());
 
-        if (snake.isDisplayHitAnimation()) {
-            snake.setDurationOfHitAnimation(snake.getDurationOfHitAnimation() - 1);
+        if (hikingEnemy.isDisplayHitAnimation()) {
+            hikingEnemy.setDurationOfHitAnimation(hikingEnemy.getDurationOfHitAnimation() - 1);
         }
-        if (snake.getDurationOfHitAnimation() <= 0) {
-            snake.setDurationOfHitAnimation(120);
-            snake.setDisplayHitAnimation(false);
+        if (hikingEnemy.getDurationOfHitAnimation() <= 0) {
+            hikingEnemy.setDurationOfHitAnimation(120);
+            hikingEnemy.setDisplayHitAnimation(false);
         }
-        if (snake.isDisplayHitAnimation() && snake.isDisplayHitAnimation()) {
-            snake.setTextureRegion(snake.getHitAnimation().getFrame());
+        if (hikingEnemy.isDisplayHitAnimation() && hikingEnemy.isDisplayHitAnimation()) {
+            hikingEnemy.setTextureRegion(hikingEnemy.getHitAnimation().getFrame());
         } else {
-            snake.setTextureRegion(snake.getMoveAnimation().getFrame());
+            hikingEnemy.setTextureRegion(hikingEnemy.getMoveAnimation().getFrame());
         }
     }
 

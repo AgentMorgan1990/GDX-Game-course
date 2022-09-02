@@ -86,7 +86,7 @@ public class Physics {
             body.createFixture(fdef).setSensor(true);
         }
 
-        if (name != null && name.equals("snake")){
+        if (name != null && name.equals("snake")|| name != null && name.equals("scorpion")){
 
             polygonShape.setAsBox(rect.width/12,rect.height/12,new Vector2(-rect.width/2,-rect.height/2),0);
             body.createFixture(fdef).setUserData("leftSensor");

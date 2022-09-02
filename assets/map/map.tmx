@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.1" orientation="orthogonal" renderorder="right-down" width="500" height="35" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="66">
+<map version="1.9" tiledversion="1.9.1" orientation="orthogonal" renderorder="right-down" width="500" height="35" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="73">
  <tileset firstgid="1" name="Набор" tilewidth="16" tileheight="16" tilecount="840" columns="20">
   <image source="Retro-Lines-Tiles-transparent.png" trans="000000" width="320" height="672"/>
   <tile id="687">
@@ -60,7 +60,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="3" name="objects" visible="0">
+ <objectgroup id="3" name="objects">
   <object id="13" name="wall" x="640.5" y="273" width="16" height="62.5">
    <properties>
     <property name="BodyType" value="StaticBody"/>
@@ -70,16 +70,7 @@
     <property name="restitution" type="float" value="0"/>
    </properties>
   </object>
-  <object id="14" name="floor" x="576.5" y="319.5" width="80" height="17">
-   <properties>
-    <property name="BodyType" value="StaticBody"/>
-    <property name="density" type="float" value="1"/>
-    <property name="friction" type="float" value="2"/>
-    <property name="gravityScale" type="float" value="1"/>
-    <property name="restitution" type="float" value="0"/>
-   </properties>
-  </object>
-  <object id="15" name="wall" x="576" y="320" width="15.5" height="63.5">
+  <object id="14" name="floor" x="576.5" y="319.5" width="59.3333" height="17">
    <properties>
     <property name="BodyType" value="StaticBody"/>
     <property name="density" type="float" value="1"/>
@@ -88,7 +79,16 @@
     <property name="restitution" type="float" value="0"/>
    </properties>
   </object>
-  <object id="16" name="wall" x="496.5" y="320.5" width="15" height="63.5">
+  <object id="15" name="wall" x="576" y="338.667" width="15.5" height="44.8333">
+   <properties>
+    <property name="BodyType" value="StaticBody"/>
+    <property name="density" type="float" value="1"/>
+    <property name="friction" type="float" value="1"/>
+    <property name="gravityScale" type="float" value="1"/>
+    <property name="restitution" type="float" value="0"/>
+   </properties>
+  </object>
+  <object id="16" name="wall" x="496.5" y="340.5" width="15" height="43.5">
    <properties>
     <property name="BodyType" value="StaticBody"/>
     <property name="density" type="float" value="1"/>
@@ -341,7 +341,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="5" name="persons" visible="0">
+ <objectgroup id="5" name="persons">
   <object id="21" name="hero" x="193.833" y="239.5" width="16" height="16">
    <properties>
     <property name="BodyType" value="DynamicBody"/>
@@ -352,9 +352,54 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="8" name="events" visible="0"/>
- <objectgroup id="9" name="enemies" visible="0">
+ <objectgroup id="8" name="events"/>
+ <objectgroup id="9" name="enemies">
   <object id="56" name="snake" x="743.333" y="250.667" width="16" height="16">
+   <properties>
+    <property name="BodyType" value="DynamicBody"/>
+    <property name="density" type="float" value="1"/>
+    <property name="friction" type="float" value="0.1"/>
+    <property name="gravityScale" type="float" value="20"/>
+    <property name="restitution" type="float" value="0"/>
+   </properties>
+  </object>
+  <object id="69" name="snake" x="684.666" y="250" width="16" height="16">
+   <properties>
+    <property name="BodyType" value="DynamicBody"/>
+    <property name="density" type="float" value="1"/>
+    <property name="friction" type="float" value="0.1"/>
+    <property name="gravityScale" type="float" value="20"/>
+    <property name="restitution" type="float" value="0"/>
+   </properties>
+  </object>
+  <object id="70" name="scorpion" x="416.666" y="300" width="16" height="16">
+   <properties>
+    <property name="BodyType" value="DynamicBody"/>
+    <property name="density" type="float" value="0.9"/>
+    <property name="friction" type="float" value="0.1"/>
+    <property name="gravityScale" type="float" value="20"/>
+    <property name="restitution" type="float" value="0"/>
+   </properties>
+  </object>
+  <object id="71" name="scorpion" x="332" y="300" width="16" height="16">
+   <properties>
+    <property name="BodyType" value="DynamicBody"/>
+    <property name="density" type="float" value="0.9"/>
+    <property name="friction" type="float" value="0.1"/>
+    <property name="gravityScale" type="float" value="20"/>
+    <property name="restitution" type="float" value="0"/>
+   </properties>
+  </object>
+  <object id="72" name="scorpion" x="612" y="300.667" width="16" height="16">
+   <properties>
+    <property name="BodyType" value="DynamicBody"/>
+    <property name="density" type="float" value="0.9"/>
+    <property name="friction" type="float" value="0.1"/>
+    <property name="gravityScale" type="float" value="20"/>
+    <property name="restitution" type="float" value="0"/>
+   </properties>
+  </object>
+  <object id="67" name="snake" x="848.666" y="252.667" width="16" height="16">
    <properties>
     <property name="BodyType" value="DynamicBody"/>
     <property name="density" type="float" value="1"/>
@@ -400,15 +445,6 @@
    </properties>
   </object>
   <object id="65" name="snake" x="1766.67" y="348.667" width="16" height="16">
-   <properties>
-    <property name="BodyType" value="DynamicBody"/>
-    <property name="density" type="float" value="1"/>
-    <property name="friction" type="float" value="0.1"/>
-    <property name="gravityScale" type="float" value="20"/>
-    <property name="restitution" type="float" value="0"/>
-   </properties>
-  </object>
-  <object id="60" name="snake" x="336.666" y="300" width="16" height="16">
    <properties>
     <property name="BodyType" value="DynamicBody"/>
     <property name="density" type="float" value="1"/>

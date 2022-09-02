@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.mygdx.game.Bullet;
 import com.mygdx.game.Hero;
-import com.mygdx.game.Snake;
+import com.mygdx.game.enemies.HikingEnemy;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,16 +18,16 @@ public class ContactProcessingService {
     public static ArrayList<Body> destroyContact = new ArrayList<>();
 
 
-    public static void executeDestroyContacts(ArrayList<Snake> snakes, ArrayList<Bullet>bullets, Hero hero) {
+    public static void executeDestroyContacts(ArrayList<HikingEnemy> hikingEnemies, ArrayList<Bullet>bullets, Hero hero) {
         for (Body body : destroyContact) {
 
-            Iterator<Snake> snakeIterator = snakes.iterator();
-            while (snakeIterator.hasNext()) {
-                Snake snake = snakeIterator.next();
-                if (snake.getBody().equals(body)) {
+            Iterator<HikingEnemy> hikingEnemyIterator = hikingEnemies.iterator();
+            while (hikingEnemyIterator.hasNext()) {
+                HikingEnemy hikingEnemy = hikingEnemyIterator.next();
+                if (hikingEnemy.getBody().equals(body)) {
                     body.setActive(false);
-                    snake.setAlive(false);
-                    snakeIterator.remove();
+                    hikingEnemy.setAlive(false);
+                    hikingEnemyIterator.remove();
                 }
             }
 
@@ -48,14 +48,14 @@ public class ContactProcessingService {
         destroyContact.clear();
     }
 
-    public static void executeReductionHealthPointContacts(ArrayList<Snake> snakes, Hero hero) {
+    public static void executeReductionHealthPointContacts(ArrayList<HikingEnemy> hikingEnemies, Hero hero) {
 
         for (Body body : reductionHealthPointContacts) {
-            for (Snake snake : snakes) {
-                if (snake.getBody().equals(body)) {
-                    snake.setDisplayHitAnimation(true);
-                    snake.setHealthPoints(snake.getHealthPoints() - 1);
-                    if (snake.getHealthPoints() <= 0) {
+            for (HikingEnemy hikingEnemy : hikingEnemies) {
+                if ( hikingEnemy.getBody().equals(body)) {
+                    hikingEnemy.setDisplayHitAnimation(true);
+                    hikingEnemy.setHealthPoints( hikingEnemy.getHealthPoints() - 1);
+                    if ( hikingEnemy.getHealthPoints() <= 0) {
                         destroyContact.add(body);
                     }
                 }
@@ -77,14 +77,14 @@ public class ContactProcessingService {
         reductionHealthPointContacts.clear();
     }
 
-    public static void executeChangesHikingEnemyMoveDirection(ArrayList<Snake> snakes) {
+    public static void executeChangesHikingEnemyMoveDirection(ArrayList<HikingEnemy> hikingEnemies) {
         for (Body snakeAction : changesHikingEnemyMoveDirection) {
-            for (Snake snake : snakes) {
-                if (snakeAction.equals(snake.getBody())) {
-                    if (snake.isMovementDirectionRight()) {
-                        snake.setMovementDirectionRight(false);
+            for (HikingEnemy hikingEnemy : hikingEnemies) {
+                if (snakeAction.equals(hikingEnemy.getBody())) {
+                    if (hikingEnemy.isMovementDirectionRight()) {
+                        hikingEnemy.setMovementDirectionRight(false);
                     } else {
-                        snake.setMovementDirectionRight(true);
+                        hikingEnemy.setMovementDirectionRight(true);
                     }
                 }
             }
