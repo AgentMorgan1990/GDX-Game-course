@@ -3,6 +3,7 @@ package com.mygdx.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -18,10 +19,17 @@ public class MenuScreen implements Screen {
     private final Texture img;
     private final Rectangle startRect;
     private final ShapeRenderer shapeRenderer;
+    private final Music menuMusic;
 
     public MenuScreen(Main game) {
         this.game = game;
         batch = new SpriteBatch();
+
+        menuMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/start_screen.mp3"));
+        menuMusic.play();
+        menuMusic.setLooping(true);
+        menuMusic.setVolume(0.5f);
+
 
         Pixmap fullSize = new Pixmap(Gdx.files.internal("start_game.png"));
         Pixmap smallSize = new Pixmap(300, 200, fullSize.getFormat());
@@ -74,6 +82,10 @@ public class MenuScreen implements Screen {
             dispose();
             game.setScreen(new GameScreen(game));
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            dispose();
+            Gdx.app.exit();
+        }
 
     }
 
@@ -102,5 +114,6 @@ public class MenuScreen implements Screen {
         this.batch.dispose();
         this.img.dispose();
         this.shapeRenderer.dispose();
+        this.menuMusic.dispose();
     }
 }

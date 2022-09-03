@@ -15,6 +15,7 @@ public class Hero {
     private final Anim hitAnim;
     private final Anim attackAnim;
     private final Sound shotSound;
+    private final Sound jumpSound;
     private boolean animationDirectionRight;
     private final Rectangle rectangle;
     private final Body body;
@@ -31,6 +32,7 @@ public class Hero {
         this.hitAnim = new Anim("atlas/Hero.atlas", Animation.PlayMode.LOOP, "Hit");
         this.attackAnim = new Anim("atlas/Hero.atlas", Animation.PlayMode.LOOP, "Attack");
         this.shotSound = Gdx.audio.newSound(Gdx.files.internal("sounds/shot_2.mp3"));
+        this.jumpSound = Gdx.audio.newSound(Gdx.files.internal("sounds/jump.mp3"));
         this.rectangle = rectangle;
         this.body = body;
         this.animationDirectionRight = true;
@@ -63,6 +65,7 @@ public class Hero {
         hitAnim.dispose();
         attackAnim.dispose();
         shotSound.dispose();
+        jumpSound.dispose();
     }
 
     public int getHealthPoints() {
@@ -127,6 +130,10 @@ public class Hero {
 
     public Body getBody() {
         return body;
+    }
+
+    public Sound getJumpSound() {
+        return jumpSound;
     }
 
     public void updateRectanglePosition() {

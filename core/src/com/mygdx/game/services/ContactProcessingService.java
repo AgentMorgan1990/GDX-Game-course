@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.mygdx.game.Bullet;
 import com.mygdx.game.Hero;
 import com.mygdx.game.enemies.HikingEnemy;
+import com.mygdx.game.screens.GameScreen;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,6 +28,7 @@ public class ContactProcessingService {
                 if (hikingEnemy.getBody().equals(body)) {
                     body.setActive(false);
                     hikingEnemy.setAlive(false);
+                    GameScreen.bodyToDeleting.add(body);
                     hikingEnemyIterator.remove();
                 }
             }
@@ -37,6 +39,7 @@ public class ContactProcessingService {
                 if (bullet.getBody().equals(body)) {
                     bullet.setAlive(false);
                     body.setActive(false);
+                    GameScreen.bodyToDeleting.add(body);
                     bulletIterator.remove();
                 }
             }
@@ -52,11 +55,12 @@ public class ContactProcessingService {
 
         for (Body body : reductionHealthPointContacts) {
             for (HikingEnemy hikingEnemy : hikingEnemies) {
-                if ( hikingEnemy.getBody().equals(body)) {
+                if (hikingEnemy.getBody().equals(body)) {
                     hikingEnemy.setDisplayHitAnimation(true);
                     hikingEnemy.setHealthPoints( hikingEnemy.getHealthPoints() - 1);
                     if ( hikingEnemy.getHealthPoints() <= 0) {
                         destroyContact.add(body);
+                        GameScreen.bodyToDeleting.add(body);
                     }
                 }
             }

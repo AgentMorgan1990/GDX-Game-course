@@ -3,6 +3,7 @@ package com.mygdx.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -38,11 +39,19 @@ public class GameScreen implements Screen {
     private ArrayList<Bullet> bullets;
     public static boolean abilityToJump = false;
     private ArrayList<HikingEnemy> hikingEnemies;
+    private final Music gameMusic;
+    public static ArrayList<Body> bodyToDeleting;
+
 
     public GameScreen(Main game) {
 
         //Инициализация физики
         physx = new Physics();
+
+        gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/game_screen.mp3"));
+        gameMusic.play();
+        gameMusic.setLooping(true);
+        gameMusic.setVolume(0.8f);
 
         //загрузка карты и её слоев
         TiledMap map = new TmxMapLoader().load("map/map.tmx");
@@ -55,6 +64,7 @@ public class GameScreen implements Screen {
 
         bullets = new ArrayList<>();
         hikingEnemies = new ArrayList<>();
+        bodyToDeleting = new ArrayList<>();
 
         //todo нарисовать экран старта игры с помощью блоков из игры
         //todo нарисовать game over и restart game
@@ -100,8 +110,8 @@ public class GameScreen implements Screen {
 
         //Обработка контактов
         ContactProcessingService.executeChangesHikingEnemyMoveDirection(hikingEnemies);
-        ContactProcessingService.executeReductionHealthPointContacts(hikingEnemies,hero);
-        ContactProcessingService.executeDestroyContacts(hikingEnemies,bullets,hero);
+        ContactProcessingService.executeReductionHealthPointContacts(hikingEnemies, hero);
+        ContactProcessingService.executeDestroyContacts(hikingEnemies, bullets, hero);
 
 
         //управление врагами
@@ -119,6 +129,7 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) hero.getBody().applyForceToCenter(new Vector2(-100000, 0), true);
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) hero.getBody().applyForceToCenter(new Vector2(100000, 0), true);
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && abilityToJump) {
+            hero.getJumpSound().play(1, 1.0f, 1);
             hero.getBody().applyForceToCenter(new Vector2(0, 10000000), true);
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)) {
@@ -157,6 +168,7 @@ public class GameScreen implements Screen {
                 bullet.setAlive(false);
                 bullet.getBody().setActive(false);
                 ContactProcessingService.destroyContact.add(bullet.getBody());
+                bodyToDeleting.add(bullet.getBody());
             }
         }
 
@@ -186,6 +198,23 @@ public class GameScreen implements Screen {
 
         physx.step();
 
+
+        for (Body body : bodyToDeleting) {
+            body.setActive(false);
+            physx.destroyBody(body);
+        }
+        bodyToDeleting.clear();
+
+
+        //управление музыкой
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+            if (gameMusic.isPlaying()){
+                gameMusic.pause();
+            } else {
+                gameMusic.play();
+            }
+
+        }
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             dispose();
             game.setScreen(new MenuScreen(game));
@@ -200,7 +229,7 @@ public class GameScreen implements Screen {
             dispose();
             game.setScreen(new WinScreen(game));
         }
-//        physx.debugDraw(camera);
+        physx.debugDraw(camera);
 
     }
 
@@ -230,6 +259,7 @@ public class GameScreen implements Screen {
         this.hero.dispose();
         this.batch.dispose();
         this.physx.dispose();
+        this.gameMusic.dispose();
 
         for (HikingEnemy hikingEnemy : hikingEnemies) {
             hikingEnemy.dispose();

@@ -17,9 +17,10 @@ public class Physics {
     }
 
     public void destroyBody(Body body) {
-        //todo если удалять тела, то приложение падает
+        //отключил, так как приложение зависает
 //        world.destroyBody(body);
     }
+
     public Body createBullet(Rectangle rectangle){
         BodyDef def = new BodyDef();
         FixtureDef fdef = new FixtureDef();
@@ -39,6 +40,7 @@ public class Physics {
         Body body;
         body = world.createBody(def);
         body.createFixture(fdef).setUserData("bullet");
+        body.setBullet(true);
         polygonShape.dispose();
         return body;
     }
@@ -72,6 +74,8 @@ public class Physics {
 
         Body body;
         body = world.createBody(def);
+        //запрет поворота объекта
+        body.setFixedRotation(true);
         String name = object.getName();
         body.createFixture(fdef).setUserData(name);
 

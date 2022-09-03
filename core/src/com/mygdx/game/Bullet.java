@@ -7,7 +7,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 public class Bullet {
     private final Body body;
     private final Rectangle rectangle;
-
     private final Texture texture;
     private boolean alive;
     private int bulletLifeTime;
