@@ -17,9 +17,13 @@ public class MenuScreen implements Screen {
     private final Main game;
     private final SpriteBatch batch;
     private final Texture img;
-    private final Rectangle startRect;
     private final ShapeRenderer shapeRenderer;
     private final Music menuMusic;
+    private  Rectangle startRect;
+    private float imgWidth;
+    private float imgHeight;
+    private float xForPicture;
+    private float yForPicture;
 
     public MenuScreen(Main game) {
         this.game = game;
@@ -30,22 +34,10 @@ public class MenuScreen implements Screen {
         menuMusic.setLooping(true);
         menuMusic.setVolume(0.5f);
 
+        img = new Texture("start_game.png");
 
-        Pixmap fullSize = new Pixmap(Gdx.files.internal("start_game.png"));
-        Pixmap smallSize = new Pixmap(300, 200, fullSize.getFormat());
-        smallSize.drawPixmap(fullSize,
-                0, 0, fullSize.getWidth(), fullSize.getHeight(),
-                0, 0, smallSize.getWidth(), smallSize.getHeight()
-        );
-
-        img = new Texture(smallSize);
-        startRect = new Rectangle(
-                Gdx.graphics.getWidth()/2f-img.getWidth()/2f,
-                Gdx.graphics.getHeight()/2f-img.getHeight()/2f,
-                img.getWidth(),
-                img.getHeight());
+        startRect = new Rectangle(xForPicture,yForPicture,imgWidth,imgHeight);
         shapeRenderer = new ShapeRenderer();
-
     }
 
 
@@ -60,9 +52,7 @@ public class MenuScreen implements Screen {
         ScreenUtils.clear(Color.LIGHT_GRAY);
 
         batch.begin();
-        batch.draw(img,
-                Gdx.graphics.getWidth()/2f-img.getWidth()/2f,
-                Gdx.graphics.getHeight()/2f-img.getHeight()/2f);
+        batch.draw(img, xForPicture, yForPicture, imgWidth, imgHeight);
         batch.end();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
@@ -91,7 +81,15 @@ public class MenuScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
+        imgWidth = Gdx.graphics.getWidth() / 3f;
+        imgHeight = Gdx.graphics.getHeight() / 3f;
+        xForPicture = Gdx.graphics.getWidth() / 2f -  imgWidth / 2f;
+        yForPicture = Gdx.graphics.getHeight() / 2f - imgHeight / 2f;
 
+        startRect.x = xForPicture;
+        startRect.y = yForPicture;
+        startRect.width = imgWidth;
+        startRect.height = imgHeight;
     }
 
     @Override

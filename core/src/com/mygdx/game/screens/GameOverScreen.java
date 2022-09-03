@@ -4,42 +4,21 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.Main;
 
 public class GameOverScreen implements Screen {
 
-
     private final Main game;
     private final SpriteBatch batch;
     private final Texture img;
-    private final Rectangle startRect;
-    private final ShapeRenderer shapeRenderer;
 
     public GameOverScreen(Main game){
         this.game = game;
         batch = new SpriteBatch();
-
-        Pixmap fullSize = new Pixmap(Gdx.files.internal("game_over.jpg"));
-        Pixmap smallSize = new Pixmap(300, 200, fullSize.getFormat());
-        smallSize.drawPixmap(fullSize,
-                0, 0, fullSize.getWidth(), fullSize.getHeight(),
-                0, 0, smallSize.getWidth(), smallSize.getHeight()
-        );
-
-        img = new Texture(smallSize);
-        startRect = new Rectangle(
-                Gdx.graphics.getWidth()/2f-img.getWidth()/2f,
-                Gdx.graphics.getHeight()/2f-img.getHeight()/2f,
-                img.getWidth(),
-                img.getHeight());
-        shapeRenderer = new ShapeRenderer();
-
+        img = new Texture("game_over.jpg");
     }
 
     @Override
@@ -49,24 +28,22 @@ public class GameOverScreen implements Screen {
 
     @Override
     public void render(float delta) {
+
         ScreenUtils.clear(Color.BLACK);
 
-        batch.begin();
-        batch.draw(img,
-                Gdx.graphics.getWidth() / 2f - img.getWidth() / 2f,
-                Gdx.graphics.getHeight() / 2f - img.getHeight() / 2f);
-        batch.end();
+        float width = Gdx.graphics.getWidth() / 1.5f;
+        float height = Gdx.graphics.getHeight() / 1.5f;
+        float x = Gdx.graphics.getWidth() / 2f - width / 2f;
+        float y = Gdx.graphics.getHeight() / 2f - height / 2f;
 
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.BLACK);
-        shapeRenderer.rect(startRect.x, startRect.y, startRect.width, startRect.height);
-        shapeRenderer.end();
+        batch.begin();
+        batch.draw(img, x, y, width, height);
+        batch.end();
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             dispose();
             game.setScreen(new MenuScreen(game));
         }
-
     }
 
     @Override
@@ -93,6 +70,5 @@ public class GameOverScreen implements Screen {
     public void dispose() {
         this.batch.dispose();
         this.img.dispose();
-        this.shapeRenderer.dispose();
     }
 }

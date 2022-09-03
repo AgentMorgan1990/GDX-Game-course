@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
@@ -9,8 +10,8 @@ public class DesktopLauncher {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setForegroundFPS(60);
 		config.setTitle("Retro lines");
-		//Graphics.DisplayMode desktopMode = LwjglApplicationConfiguration.getDesktopDisplayMode();
-		//cfg.setFromDisplayMode(desktopMode);
+		Graphics.DisplayMode desktopMode = config.getDisplayMode();
+		config.setWindowedMode(desktopMode.width, desktopMode.height);
 		new Lwjgl3Application(new Main(), config);
 	}
 }
