@@ -17,8 +17,7 @@ public class Physics {
     }
 
     public void destroyBody(Body body) {
-        //отключил, так как приложение зависает
-//        world.destroyBody(body);
+        world.destroyBody(body);
     }
 
     public Body createBullet(Rectangle rectangle){

@@ -168,7 +168,6 @@ public class GameScreen implements Screen {
                 bullet.setAlive(false);
                 bullet.getBody().setActive(false);
                 ContactProcessingService.destroyContact.add(bullet.getBody());
-                bodyToDeleting.add(bullet.getBody());
             }
         }
 
@@ -195,6 +194,8 @@ public class GameScreen implements Screen {
         batch.end();
 
         mapRenderer.render(l1);
+
+        physx.debugDraw(camera);
 
         physx.step();
 
@@ -229,8 +230,6 @@ public class GameScreen implements Screen {
             dispose();
             game.setScreen(new WinScreen(game));
         }
-        physx.debugDraw(camera);
-
     }
 
     @Override

@@ -60,7 +60,6 @@ public class ContactProcessingService {
                     hikingEnemy.setHealthPoints( hikingEnemy.getHealthPoints() - 1);
                     if ( hikingEnemy.getHealthPoints() <= 0) {
                         destroyContact.add(body);
-                        GameScreen.bodyToDeleting.add(body);
                     }
                 }
             }
