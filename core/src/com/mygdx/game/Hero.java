@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 
@@ -14,13 +15,15 @@ public class Hero {
     private final Anim hitAnim;
     private final Anim attackAnim;
     private final Sound shotSound;
+    private final Sound jumpSound;
     private boolean animationDirectionRight;
     private final Rectangle rectangle;
     private final Body body;
-    private int hitPoint;
+    private int healthPoints;
     private int durationOfHitAnimation;
     private boolean displayHitAnimation;
     private boolean alive;
+    private TextureRegion textureRegion;
 
     public Hero(Rectangle rectangle, Body body) {
         this.walkAnim = new Anim("atlas/Hero.atlas", Animation.PlayMode.LOOP, "Walk");
@@ -29,13 +32,22 @@ public class Hero {
         this.hitAnim = new Anim("atlas/Hero.atlas", Animation.PlayMode.LOOP, "Hit");
         this.attackAnim = new Anim("atlas/Hero.atlas", Animation.PlayMode.LOOP, "Attack");
         this.shotSound = Gdx.audio.newSound(Gdx.files.internal("sounds/shot_2.mp3"));
+        this.jumpSound = Gdx.audio.newSound(Gdx.files.internal("sounds/jump.mp3"));
         this.rectangle = rectangle;
         this.body = body;
         this.animationDirectionRight = true;
-        this.hitPoint=3;
-        this.durationOfHitAnimation=120;
+        this.healthPoints = 3;
+        this.durationOfHitAnimation = 120;
         this.displayHitAnimation = false;
         this.alive = true;
+    }
+
+    public TextureRegion getTextureRegion() {
+        return textureRegion;
+    }
+
+    public void setTextureRegion(TextureRegion textureRegion) {
+        this.textureRegion = textureRegion;
     }
 
     public boolean isAlive() {
@@ -53,14 +65,15 @@ public class Hero {
         hitAnim.dispose();
         attackAnim.dispose();
         shotSound.dispose();
+        jumpSound.dispose();
     }
 
-    public int getHitPoint() {
-        return hitPoint;
+    public int getHealthPoints() {
+        return healthPoints;
     }
 
-    public void setHitPoint(int hitPoint) {
-        this.hitPoint = hitPoint;
+    public void setHealthPoints(int healthPoints) {
+        this.healthPoints = healthPoints;
     }
 
     public int getDurationOfHitAnimation() {
@@ -117,6 +130,10 @@ public class Hero {
 
     public Body getBody() {
         return body;
+    }
+
+    public Sound getJumpSound() {
+        return jumpSound;
     }
 
     public void updateRectanglePosition() {

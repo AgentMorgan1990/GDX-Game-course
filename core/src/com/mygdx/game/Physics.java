@@ -5,6 +5,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.mygdx.game.contacts.MyContactList;
 
 public class Physics {
     private final World world;
@@ -16,9 +17,9 @@ public class Physics {
     }
 
     public void destroyBody(Body body) {
-        //todo если удалять тела, то приложение падает
-//        world.destroyBody(body);
+        world.destroyBody(body);
     }
+
     public Body createBullet(Rectangle rectangle){
         BodyDef def = new BodyDef();
         FixtureDef fdef = new FixtureDef();
@@ -38,6 +39,7 @@ public class Physics {
         Body body;
         body = world.createBody(def);
         body.createFixture(fdef).setUserData("bullet");
+        body.setBullet(true);
         polygonShape.dispose();
         return body;
     }
@@ -71,6 +73,8 @@ public class Physics {
 
         Body body;
         body = world.createBody(def);
+        //запрет поворота объекта
+        body.setFixedRotation(true);
         String name = object.getName();
         body.createFixture(fdef).setUserData(name);
 
@@ -83,6 +87,17 @@ public class Physics {
             body.createFixture(fdef).setSensor(true);
             polygonShape.setAsBox(rect.width/12,rect.height/12,new Vector2(-rect.width/2,0),0);
             body.createFixture(fdef).setSensor(true);
+        }
+
+        if (name != null && name.equals("snake")|| name != null && name.equals("scorpion")){
+
+            polygonShape.setAsBox(rect.width/12,rect.height/12,new Vector2(-rect.width/2,-rect.height/2),0);
+            body.createFixture(fdef).setUserData("leftSensor");
+            body.getFixtureList().get(body.getFixtureList().size-1).setSensor(true);
+
+            polygonShape.setAsBox(rect.width/12,rect.height/12,new Vector2(rect.width/2,-rect.height/2),0);
+            body.createFixture(fdef).setUserData("rightSensor");
+            body.getFixtureList().get(body.getFixtureList().size-1).setSensor(true);
         }
 
         polygonShape.dispose();

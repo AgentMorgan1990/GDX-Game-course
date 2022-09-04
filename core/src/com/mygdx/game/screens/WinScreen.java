@@ -9,16 +9,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.Main;
 
-public class GameOverScreen implements Screen {
-
+public class WinScreen implements Screen {
     private final Main game;
     private final SpriteBatch batch;
     private final Texture img;
 
-    public GameOverScreen(Main game){
+    public WinScreen(Main game) {
         this.game = game;
         batch = new SpriteBatch();
-        img = new Texture("game_over.jpg");
+        img = new Texture("win.jpg");
     }
 
     @Override
@@ -44,6 +43,7 @@ public class GameOverScreen implements Screen {
             dispose();
             game.setScreen(new MenuScreen(game));
         }
+
     }
 
     @Override
