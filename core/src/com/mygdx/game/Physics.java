@@ -10,6 +10,7 @@ import com.mygdx.game.contacts.MyContactList;
 public class Physics {
     private final World world;
     private final Box2DDebugRenderer debugRenderer;
+    public final static float PPM = 100;
     public Physics() {
         world = new World(new Vector2(0.0f, -9.8f), true);
         world.setContactListener(new MyContactList());
@@ -25,8 +26,8 @@ public class Physics {
         FixtureDef fdef = new FixtureDef();
         PolygonShape polygonShape = new PolygonShape();
         def.type = BodyDef.BodyType.DynamicBody;
-        def.position.set(rectangle.x + rectangle.width/2.0f, rectangle.y + rectangle.height/2.0f);
-        polygonShape.setAsBox(rectangle.width/2.0f, rectangle.height/2.0f);
+        def.position.set((rectangle.x + rectangle.width/2.0f)/PPM, (rectangle.y + rectangle.height/2.0f)/PPM);
+        polygonShape.setAsBox(rectangle.width/2.0f/PPM, rectangle.height/2.0f/PPM);
         fdef.shape = polygonShape;
         //сила притяжения
         def.gravityScale = 0;
@@ -54,9 +55,9 @@ public class Physics {
         if (type.equals("StaticBody")) def.type = BodyDef.BodyType.StaticBody;
         if (type.equals("DynamicBody")) def.type = BodyDef.BodyType.DynamicBody;
 
-        def.position.set(rect.x + rect.width/2.0f, rect.y + rect.height/2.0f);
+        def.position.set((rect.x + rect.width/2.0f)/PPM, (rect.y + rect.height/2.0f)/PPM);
 
-        polygonShape.setAsBox(rect.width/2.0f, rect.height/2.0f);
+        polygonShape.setAsBox(rect.width/2.0f/PPM, rect.height/2.0f/PPM);
         fdef.shape = polygonShape;
 
         //сила притяжения

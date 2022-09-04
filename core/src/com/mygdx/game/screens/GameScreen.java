@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -142,14 +143,14 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.Q)) camera.zoom += 0.01f;
         if (Gdx.input.isKeyPressed(Input.Keys.W) && camera.zoom > 0) camera.zoom -= 0.01f;
 
-        camera.position.x = hero.getBody().getPosition().x;
-        camera.position.y = hero.getBody().getPosition().y;
+        camera.position.x = hero.getBody().getPosition().x*Physics.PPM;
+        camera.position.y = hero.getBody().getPosition().y*Physics.PPM;
         camera.update();
 
         ScreenUtils.clear(0, 0, 0, 1);
         mapRenderer.setView(camera);
         mapRenderer.render(bg);
-        batch.setProjectionMatrix(camera.combined);
+//        batch.setProjectionMatrix(camera.combined);
 
 
         //Обновление данных объектов по анимации
@@ -175,16 +176,40 @@ public class GameScreen implements Screen {
 
         //отрисовка змей
         for (HikingEnemy hikingEnemy : hikingEnemies) {
-            batch.draw(hikingEnemy.getTextureRegion(), hikingEnemy.getRectangle().x, hikingEnemy.getRectangle().y, hikingEnemy.getRectangle().width, hikingEnemy.getRectangle().height);
+            float x = hikingEnemy.getRectangle().x / 2f - hikingEnemy.getRectangle().x / 2 / camera.zoom;
+            float y = hikingEnemy.getRectangle().y / 2f -  hikingEnemy.getRectangle().y / 2 / camera.zoom;
+            Sprite spr = new Sprite(hikingEnemy.getTextureRegion());
+            spr.setOriginCenter();
+            spr.scale(1.5f);
+            spr.setPosition(x, y);
+            spr.draw(batch);
+//            batch.draw(hikingEnemy.getTextureRegion(), hikingEnemy.getRectangle().x, hikingEnemy.getRectangle().y, hikingEnemy.getRectangle().width, hikingEnemy.getRectangle().height);
         }
 
         //отрисовка пуль
         for (Bullet bullet : bullets) {
-            batch.draw(bullet.getTexture(), bullet.getRectangle().x, bullet.getRectangle().y, bullet.getRectangle().width, bullet.getRectangle().height);
+//            float x = Gdx.graphics.getWidth() / 2f - bullet.getRectangle().x / 2;
+//            float y = Gdx.graphics.getHeight() / 2f -  bullet.getRectangle().y / 2;
+            Sprite spr = new Sprite(bullet.getTexture());
+            spr.setOriginCenter();
+            spr.scale(1.5f);
+            spr.setPosition(bullet.getRectangle().x, bullet.getRectangle().y);
+            spr.draw(batch);
+//            batch.draw(bullet.getTexture(), bullet.getRectangle().x, bullet.getRectangle().y, bullet.getRectangle().width, bullet.getRectangle().height);
         }
 
         //отрисовка персонажа
-        batch.draw(hero.getTextureRegion(), hero.getRectangle().x, hero.getRectangle().y, hero.getRectangle().width, hero.getRectangle().height);
+//        batch.draw(hero.getTextureRegion(), x, y, hero.getRectangle().width, hero.getRectangle().height);
+        float x = Gdx.graphics.getWidth() / 2f - hero.getRectangle().getWidth() / 2;
+        float y = Gdx.graphics.getHeight() / 2f - hero.getRectangle().getHeight() / 2;
+
+        Sprite spr = new Sprite(hero.getTextureRegion());
+        spr.setOriginCenter();
+        spr.scale(2f);
+        spr.setPosition(x, y);
+//        spr.setRegionWidth((int) (16/camera.zoom));
+//        spr.setRegionHeight((int) (16/camera.zoom));
+        spr.draw(batch);
 
         //отрисовка кол-ва жизней
         for (int i = 0; i < hero.getHealthPoints(); i++) {
@@ -195,7 +220,7 @@ public class GameScreen implements Screen {
 
         mapRenderer.render(l1);
 
-//        physx.debugDraw(camera);
+        physx.debugDraw(camera);
 
         physx.step();
 
@@ -272,10 +297,10 @@ public class GameScreen implements Screen {
         Rectangle rectangle = new Rectangle();
         rectangle.setSize(4, 4);
         if (hero.isAnimationDirectionRight()) {
-            rectangle.setPosition(hero.getRectangle().x + hero.getRectangle().width / 2, hero.getRectangle().y + hero.getRectangle().height / 3);
+            rectangle.setPosition(Gdx.graphics.getWidth() / 2f - hero.getRectangle().getWidth() / 2 + Gdx.graphics.getHeight() / 2f - hero.getRectangle().getHeight() / 2, hero.getRectangle().y + hero.getRectangle().height / 3);
         }
         if (!hero.isAnimationDirectionRight()) {
-            rectangle.setPosition(hero.getRectangle().x, hero.getRectangle().y + hero.getRectangle().height / 3);
+            rectangle.setPosition(Gdx.graphics.getWidth() / 2f - hero.getRectangle().getWidth() / 2, Gdx.graphics.getHeight() / 2f - hero.getRectangle().getHeight() / 2 + hero.getRectangle().height / 3);
         }
         Body bulletBody = physx.createBullet(rectangle);
         if (hero.isAnimationDirectionRight()) {
