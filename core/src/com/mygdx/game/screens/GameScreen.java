@@ -6,7 +6,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -95,7 +94,7 @@ public class GameScreen implements Screen {
             if (rmo.getName().equals("snake")) {
                 hikingEnemy = new Snake(physx.addObject(rmo), rmo.getRectangle());
             }
-            if (rmo.getName().equals("scorpion")){
+            if (rmo.getName().equals("scorpion")) {
                 hikingEnemy = new Scorpion(physx.addObject(rmo), rmo.getRectangle());
             }
             hikingEnemies.add(hikingEnemy);
@@ -127,11 +126,13 @@ public class GameScreen implements Screen {
         }
 
         //Управление персонажем
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) hero.getBody().applyForceToCenter(new Vector2(-100000, 0), true);
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) hero.getBody().applyForceToCenter(new Vector2(100000, 0), true);
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && hero.getBody().getLinearVelocity().x > -1.8f)
+            hero.getBody().applyForceToCenter(new Vector2(-0.6f, 0), true);
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && hero.getBody().getLinearVelocity().x < 1.8f)
+            hero.getBody().applyForceToCenter(new Vector2(0.6f, 0), true);
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && abilityToJump) {
             hero.getJumpSound().play(1, 1.0f, 1);
-            hero.getBody().applyForceToCenter(new Vector2(0, 10000000), true);
+            hero.getBody().applyForceToCenter(new Vector2(0, 7.0f), true);
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)) {
             createBullet();
@@ -143,14 +144,14 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.Q)) camera.zoom += 0.01f;
         if (Gdx.input.isKeyPressed(Input.Keys.W) && camera.zoom > 0) camera.zoom -= 0.01f;
 
-        camera.position.x = hero.getBody().getPosition().x*Physics.PPM;
-        camera.position.y = hero.getBody().getPosition().y*Physics.PPM;
+        camera.position.x = hero.getBody().getPosition().x * Physics.PPM;
+        camera.position.y = hero.getBody().getPosition().y * Physics.PPM;
         camera.update();
 
         ScreenUtils.clear(0, 0, 0, 1);
         mapRenderer.setView(camera);
         mapRenderer.render(bg);
-//        batch.setProjectionMatrix(camera.combined);
+        batch.setProjectionMatrix(camera.combined);
 
 
         //Обновление данных объектов по анимации
@@ -176,44 +177,38 @@ public class GameScreen implements Screen {
 
         //отрисовка змей
         for (HikingEnemy hikingEnemy : hikingEnemies) {
-            float x = hikingEnemy.getRectangle().x / 2f - hikingEnemy.getRectangle().x / 2 / camera.zoom;
-            float y = hikingEnemy.getRectangle().y / 2f -  hikingEnemy.getRectangle().y / 2 / camera.zoom;
-            Sprite spr = new Sprite(hikingEnemy.getTextureRegion());
-            spr.setOriginCenter();
-            spr.scale(1.5f);
-            spr.setPosition(x, y);
-            spr.draw(batch);
-//            batch.draw(hikingEnemy.getTextureRegion(), hikingEnemy.getRectangle().x, hikingEnemy.getRectangle().y, hikingEnemy.getRectangle().width, hikingEnemy.getRectangle().height);
+            batch.draw(hikingEnemy.getTextureRegion(),
+                    (hikingEnemy.getBody().getPosition().x * Physics.PPM) - hikingEnemy.getRectangle().width / 2,
+                    (hikingEnemy.getBody().getPosition().y * Physics.PPM) - hikingEnemy.getRectangle().height / 2,
+                    hikingEnemy.getRectangle().width,
+                    hikingEnemy.getRectangle().height);
         }
 
-        //отрисовка пуль
+
+//        отрисовка пуль
         for (Bullet bullet : bullets) {
-//            float x = Gdx.graphics.getWidth() / 2f - bullet.getRectangle().x / 2;
-//            float y = Gdx.graphics.getHeight() / 2f -  bullet.getRectangle().y / 2;
-            Sprite spr = new Sprite(bullet.getTexture());
-            spr.setOriginCenter();
-            spr.scale(1.5f);
-            spr.setPosition(bullet.getRectangle().x, bullet.getRectangle().y);
-            spr.draw(batch);
-//            batch.draw(bullet.getTexture(), bullet.getRectangle().x, bullet.getRectangle().y, bullet.getRectangle().width, bullet.getRectangle().height);
+            batch.draw(
+                    bullet.getTexture(),
+                    bullet.getBody().getPosition().x * Physics.PPM,
+                    bullet.getBody().getPosition().y * Physics.PPM,
+                    bullet.getRectangle().width * Physics.PPM,
+                    bullet.getRectangle().height * Physics.PPM);
         }
 
         //отрисовка персонажа
-//        batch.draw(hero.getTextureRegion(), x, y, hero.getRectangle().width, hero.getRectangle().height);
-        float x = Gdx.graphics.getWidth() / 2f - hero.getRectangle().getWidth() / 2;
-        float y = Gdx.graphics.getHeight() / 2f - hero.getRectangle().getHeight() / 2;
-
-        Sprite spr = new Sprite(hero.getTextureRegion());
-        spr.setOriginCenter();
-        spr.scale(2f);
-        spr.setPosition(x, y);
-//        spr.setRegionWidth((int) (16/camera.zoom));
-//        spr.setRegionHeight((int) (16/camera.zoom));
-        spr.draw(batch);
+        batch.draw(hero.getTextureRegion(),
+                (hero.getBody().getPosition().x * Physics.PPM) - hero.getRectangle().width / 2,
+                (hero.getBody().getPosition().y * Physics.PPM) - hero.getRectangle().height / 2,
+                hero.getRectangle().width,
+                hero.getRectangle().height);
 
         //отрисовка кол-ва жизней
         for (int i = 0; i < hero.getHealthPoints(); i++) {
-            batch.draw(lifeImage, hero.getBody().getPosition().x - (camera.viewportWidth * camera.zoom) / 4 + (i * lifeImage.getWidth()), hero.getBody().getPosition().y + (camera.viewportWidth * camera.zoom) / 5, lifeImage.getWidth(), lifeImage.getHeight());
+            batch.draw(lifeImage,
+                    hero.getBody().getPosition().x * Physics.PPM + i * lifeImage.getWidth() - camera.viewportHeight * camera.zoom / 2,
+                    hero.getBody().getPosition().y * Physics.PPM + camera.viewportHeight * camera.zoom / 3,
+                    lifeImage.getWidth(),
+                    lifeImage.getHeight());
         }
 
         batch.end();
@@ -234,7 +229,7 @@ public class GameScreen implements Screen {
 
         //управление музыкой
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-            if (gameMusic.isPlaying()){
+            if (gameMusic.isPlaying()) {
                 gameMusic.pause();
             } else {
                 gameMusic.play();
@@ -293,21 +288,28 @@ public class GameScreen implements Screen {
         }
         this.lifeImage.dispose();
     }
+
     private void createBullet() {
         Rectangle rectangle = new Rectangle();
-        rectangle.setSize(4, 4);
+        rectangle.setSize(4 / Physics.PPM, 4 / Physics.PPM);
         if (hero.isAnimationDirectionRight()) {
-            rectangle.setPosition(Gdx.graphics.getWidth() / 2f - hero.getRectangle().getWidth() / 2 + Gdx.graphics.getHeight() / 2f - hero.getRectangle().getHeight() / 2, hero.getRectangle().y + hero.getRectangle().height / 3);
+            rectangle.setPosition(
+                    hero.getBody().getPosition().x + hero.getRectangle().width / 2 / Physics.PPM,
+                    hero.getBody().getPosition().y - (hero.getRectangle().height / Physics.PPM / 3)
+            );
         }
         if (!hero.isAnimationDirectionRight()) {
-            rectangle.setPosition(Gdx.graphics.getWidth() / 2f - hero.getRectangle().getWidth() / 2, Gdx.graphics.getHeight() / 2f - hero.getRectangle().getHeight() / 2 + hero.getRectangle().height / 3);
+            rectangle.setPosition(
+                    hero.getBody().getPosition().x - hero.getRectangle().width / 2 / Physics.PPM,
+                    hero.getBody().getPosition().y - (hero.getRectangle().height / Physics.PPM / 3)
+            );
         }
         Body bulletBody = physx.createBullet(rectangle);
         if (hero.isAnimationDirectionRight()) {
-            bulletBody.applyForceToCenter(new Vector2(10000000, 0), true);
+            bulletBody.applyForceToCenter(new Vector2(0.5f, 0), true);
         }
         if (!hero.isAnimationDirectionRight()) {
-            bulletBody.applyForceToCenter(new Vector2(-10000000, 0), true);
+            bulletBody.applyForceToCenter(new Vector2(-0.5f, 0), true);
         }
         bullets.add(new Bullet(bulletBody, rectangle));
     }

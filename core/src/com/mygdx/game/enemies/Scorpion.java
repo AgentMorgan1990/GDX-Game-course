@@ -18,8 +18,8 @@ public class Scorpion extends HikingEnemy {
         this.setDurationOfHitAnimation(120);
         this.setDisplayHitAnimation(false);
         this.setAnimationDirectionRight(true);
-        this.setMovementSpeed(24000);
-        this.setStepFrequency(40);
+        this.setMovementSpeed(0.2f);
+        this.setStepFrequency(0.4f);
     }
     @Override
     public void dispose(){

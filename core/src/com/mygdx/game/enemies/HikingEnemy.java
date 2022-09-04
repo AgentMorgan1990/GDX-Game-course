@@ -18,8 +18,8 @@ public abstract class HikingEnemy {
     private boolean displayHitAnimation;
     private TextureRegion textureRegion;
     private boolean alive;
-    private int movementSpeed;
-    private int stepFrequency;
+    private float movementSpeed;
+    private float stepFrequency;
 
     public HikingEnemy(Body body, Rectangle rectangle ){
         this.body = body;
@@ -36,8 +36,8 @@ public abstract class HikingEnemy {
         hitAnimation.setTime(deltaTime);
     }
     public void updateRectanglePosition() {
-        rectangle.x = body.getPosition().x - rectangle.width / 2;
-        rectangle.y = body.getPosition().y - rectangle.height / 2;
+//        rectangle.x = body.getPosition().x - rectangle.width / 2;
+//        rectangle.y = body.getPosition().y - rectangle.height / 2;
     }
 
     public boolean isMovementDirectionRight() {
@@ -136,19 +136,19 @@ public abstract class HikingEnemy {
         this.alive = alive;
     }
 
-    public int getMovementSpeed() {
+    public float getMovementSpeed() {
         return movementSpeed;
     }
 
-    public void setMovementSpeed(int movementSpeed) {
+    public void setMovementSpeed(float movementSpeed) {
         this.movementSpeed = movementSpeed;
     }
 
-    public int getStepFrequency() {
+    public float getStepFrequency() {
         return stepFrequency;
     }
 
-    public void setStepFrequency(int stepFrequency) {
+    public void setStepFrequency(float stepFrequency) {
         this.stepFrequency = stepFrequency;
     }
 }

@@ -27,11 +27,11 @@ public class AnimationService {
         }
         if (hero.isDisplayHitAnimation() && hero.isDisplayHitAnimation()) {
             hero.setTextureRegion(hero.getHitAnim().getFrame());
-        } else if (hero.getBody().getLinearVelocity().y > 60) {
+        } else if (hero.getBody().getLinearVelocity().y > 0.5f) {
             hero.setTextureRegion(hero.getJumpAnim().getFrame());
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)) {
             hero.setTextureRegion(hero.getAttackAnim().getFrame());
-        } else if (hero.getBody().getLinearVelocity().x <= -10 || hero.getBody().getLinearVelocity().x > 10) {
+        } else if (hero.getBody().getLinearVelocity().x <= -0.01f || hero.getBody().getLinearVelocity().x > 0.01f) {
             hero.setTextureRegion(hero.getWalkAnim().getFrame());
         } else {
             hero.setTextureRegion(hero.getIdleAnim().getFrame());
@@ -79,10 +79,10 @@ public class AnimationService {
 
     private static boolean defineAnimationDirectionRight(Body body, boolean animationDirection) {
         boolean animationDirectionRight = animationDirection;
-        if (body.getLinearVelocity().x <= -10) {
+        if (body.getLinearVelocity().x <= -0.01f) {
             animationDirectionRight = false;
         }
-        if (body.getLinearVelocity().x > 10) {
+        if (body.getLinearVelocity().x > 0.01f) {
             animationDirectionRight = true;
         }
         return animationDirectionRight;

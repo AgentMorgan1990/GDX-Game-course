@@ -21,8 +21,8 @@ public class Bullet {
 
 
     public void updateRectanglePosition() {
-        rectangle.x = body.getPosition().x - rectangle.getWidth() / 2;
-        rectangle.y = body.getPosition().y - rectangle.getHeight() / 2;
+//        rectangle.x = body.getPosition().x - rectangle.getWidth() / 2;
+//        rectangle.y = body.getPosition().y - rectangle.getHeight() / 2;
 
     }
 
