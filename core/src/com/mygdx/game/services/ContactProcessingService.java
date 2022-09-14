@@ -65,9 +65,9 @@ public class ContactProcessingService {
             }
             if (hero.getBody().equals(body)) {
                 if (hero.isAnimationDirectionRight()){
-                    hero.getBody().applyForceToCenter(new Vector2(-1000000, 1000000), true);
+                    hero.getBody().applyForceToCenter(new Vector2(-1.5f, 5.5f), true);
                 } else {
-                    hero.getBody().applyForceToCenter(new Vector2(1000000, 1000000), true);
+                    hero.getBody().applyForceToCenter(new Vector2(1.5f, 5.5f), true);
                 }
 
                 hero.setDisplayHitAnimation(true);

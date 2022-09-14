@@ -17,7 +17,7 @@ public class Snake extends HikingEnemy {
         this.setDurationOfHitAnimation(120);
         this.setDisplayHitAnimation(false);
         this.setAnimationDirectionRight(true);
-        this.setMovementSpeed(20000);
-        this.setStepFrequency(10);
+        this.setMovementSpeed(0.1f);
+        this.setStepFrequency(0.2f);
     }
 }

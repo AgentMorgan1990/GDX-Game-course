@@ -61,7 +61,7 @@
 </data>
  </layer>
  <objectgroup id="3" name="objects">
-  <object id="13" name="wall" x="640.5" y="273" width="16" height="62.5">
+  <object id="13" name="wall" x="640.5" y="293" width="16" height="42.5">
    <properties>
     <property name="BodyType" value="StaticBody"/>
     <property name="density" type="float" value="1"/>
@@ -70,7 +70,7 @@
     <property name="restitution" type="float" value="0"/>
    </properties>
   </object>
-  <object id="14" name="floor" x="576.5" y="319.5" width="59.3333" height="17">
+  <object id="14" name="floor" x="576.5" y="319.5" width="55.3333" height="17">
    <properties>
     <property name="BodyType" value="StaticBody"/>
     <property name="density" type="float" value="1"/>
@@ -97,7 +97,7 @@
     <property name="restitution" type="float" value="0"/>
    </properties>
   </object>
-  <object id="17" name="floor" x="258" y="319.5" width="253.5" height="16">
+  <object id="17" name="floor" x="263.333" y="319.5" width="248.167" height="16">
    <properties>
     <property name="BodyType" value="StaticBody"/>
     <property name="density" type="float" value="1"/>
@@ -151,7 +151,7 @@
     <property name="restitution" type="float" value="0"/>
    </properties>
   </object>
-  <object id="33" name="wall" x="897.333" y="272" width="12.6667" height="126.667">
+  <object id="33" name="wall" x="897.333" y="300.667" width="12.6667" height="98.0003">
    <properties>
     <property name="BodyType" value="StaticBody"/>
     <property name="density" type="float" value="1"/>
@@ -169,7 +169,7 @@
     <property name="restitution" type="float" value="0"/>
    </properties>
   </object>
-  <object id="35" name="wall" x="960.667" y="272.667" width="16" height="124.667">
+  <object id="35" name="wall" x="960.667" y="294.667" width="16" height="102.667">
    <properties>
     <property name="BodyType" value="StaticBody"/>
     <property name="density" type="float" value="1"/>
@@ -187,7 +187,7 @@
     <property name="restitution" type="float" value="0"/>
    </properties>
   </object>
-  <object id="37" name="wall" x="1184" y="272" width="15.3333" height="95.3333">
+  <object id="37" name="wall" x="1184" y="294.667" width="15.3333" height="72.6666">
    <properties>
     <property name="BodyType" value="StaticBody"/>
     <property name="density" type="float" value="1"/>
@@ -196,7 +196,7 @@
     <property name="restitution" type="float" value="0"/>
    </properties>
   </object>
-  <object id="38" name="floor" x="1202.27" y="352" width="221.733" height="14.6667">
+  <object id="38" name="floor" x="1207.6" y="352" width="216.4" height="14.6667">
    <properties>
     <property name="BodyType" value="StaticBody"/>
     <property name="density" type="float" value="1"/>
@@ -232,7 +232,7 @@
     <property name="restitution" type="float" value="0"/>
    </properties>
   </object>
-  <object id="43" name="wall" x="1407.33" y="352.667" width="16.6667" height="77.3333">
+  <object id="43" name="wall" x="1407.33" y="372.667" width="16.6667" height="57.3333">
    <properties>
     <property name="BodyType" value="StaticBody"/>
     <property name="density" type="float" value="1"/>
@@ -250,7 +250,7 @@
     <property name="restitution" type="float" value="0"/>
    </properties>
   </object>
-  <object id="45" name="wall" x="1472.67" y="368.533" width="16.6667" height="62.1333">
+  <object id="45" name="wall" x="1472.67" y="373.866" width="16.6667" height="56.8">
    <properties>
     <property name="BodyType" value="StaticBody"/>
     <property name="density" type="float" value="1"/>
@@ -268,7 +268,7 @@
     <property name="restitution" type="float" value="0"/>
    </properties>
   </object>
-  <object id="47" name="wall" x="1505.33" y="367.867" width="14.6667" height="62.8">
+  <object id="47" name="wall" x="1505.33" y="374.534" width="14.6667" height="56.1333">
    <properties>
     <property name="BodyType" value="StaticBody"/>
     <property name="density" type="float" value="1"/>
@@ -322,7 +322,7 @@
     <property name="restitution" type="float" value="0"/>
    </properties>
   </object>
-  <object id="53" name="wall" x="1680.67" y="369.333" width="14.6667" height="44">
+  <object id="53" name="wall" x="1680.67" y="387.333" width="14.6667" height="26">
    <properties>
     <property name="BodyType" value="StaticBody"/>
     <property name="density" type="float" value="1"/>
@@ -331,7 +331,7 @@
     <property name="restitution" type="float" value="0"/>
    </properties>
   </object>
-  <object id="54" name="floor" x="1682" y="368.667" width="121.333" height="14">
+  <object id="54" name="floor" x="1682" y="368.667" width="116.666" height="14">
    <properties>
     <property name="BodyType" value="StaticBody"/>
     <property name="density" type="float" value="1"/>
@@ -345,9 +345,9 @@
   <object id="21" name="hero" x="193.833" y="239.5" width="16" height="16">
    <properties>
     <property name="BodyType" value="DynamicBody"/>
-    <property name="density" type="float" value="0.7"/>
+    <property name="density" type="float" value="1.2"/>
     <property name="friction" type="float" value="0.2"/>
-    <property name="gravityScale" type="float" value="10"/>
+    <property name="gravityScale" type="float" value="1"/>
     <property name="restitution" type="float" value="0"/>
    </properties>
   </object>
@@ -359,7 +359,7 @@
     <property name="BodyType" value="DynamicBody"/>
     <property name="density" type="float" value="1"/>
     <property name="friction" type="float" value="0.1"/>
-    <property name="gravityScale" type="float" value="20"/>
+    <property name="gravityScale" type="float" value="1"/>
     <property name="restitution" type="float" value="0"/>
    </properties>
   </object>
@@ -368,34 +368,34 @@
     <property name="BodyType" value="DynamicBody"/>
     <property name="density" type="float" value="1"/>
     <property name="friction" type="float" value="0.1"/>
-    <property name="gravityScale" type="float" value="20"/>
+    <property name="gravityScale" type="float" value="1"/>
     <property name="restitution" type="float" value="0"/>
    </properties>
   </object>
   <object id="70" name="scorpion" x="416.666" y="300" width="16" height="16">
    <properties>
     <property name="BodyType" value="DynamicBody"/>
-    <property name="density" type="float" value="0.9"/>
+    <property name="density" type="float" value="1"/>
     <property name="friction" type="float" value="0.1"/>
-    <property name="gravityScale" type="float" value="20"/>
+    <property name="gravityScale" type="float" value="1"/>
     <property name="restitution" type="float" value="0"/>
    </properties>
   </object>
   <object id="71" name="scorpion" x="332" y="300" width="16" height="16">
    <properties>
     <property name="BodyType" value="DynamicBody"/>
-    <property name="density" type="float" value="0.9"/>
+    <property name="density" type="float" value="1"/>
     <property name="friction" type="float" value="0.1"/>
-    <property name="gravityScale" type="float" value="20"/>
+    <property name="gravityScale" type="float" value="1"/>
     <property name="restitution" type="float" value="0"/>
    </properties>
   </object>
-  <object id="72" name="scorpion" x="612" y="300.667" width="16" height="16">
+  <object id="72" name="scorpion" x="604.667" y="300.667" width="16" height="16">
    <properties>
     <property name="BodyType" value="DynamicBody"/>
-    <property name="density" type="float" value="0.9"/>
+    <property name="density" type="float" value="1"/>
     <property name="friction" type="float" value="0.1"/>
-    <property name="gravityScale" type="float" value="20"/>
+    <property name="gravityScale" type="float" value="1"/>
     <property name="restitution" type="float" value="0"/>
    </properties>
   </object>
@@ -404,7 +404,7 @@
     <property name="BodyType" value="DynamicBody"/>
     <property name="density" type="float" value="1"/>
     <property name="friction" type="float" value="0.1"/>
-    <property name="gravityScale" type="float" value="20"/>
+    <property name="gravityScale" type="float" value="1"/>
     <property name="restitution" type="float" value="0"/>
    </properties>
   </object>
@@ -413,7 +413,7 @@
     <property name="BodyType" value="DynamicBody"/>
     <property name="density" type="float" value="1"/>
     <property name="friction" type="float" value="0.1"/>
-    <property name="gravityScale" type="float" value="20"/>
+    <property name="gravityScale" type="float" value="1"/>
     <property name="restitution" type="float" value="0"/>
    </properties>
   </object>
@@ -422,7 +422,7 @@
     <property name="BodyType" value="DynamicBody"/>
     <property name="density" type="float" value="1"/>
     <property name="friction" type="float" value="0.1"/>
-    <property name="gravityScale" type="float" value="20"/>
+    <property name="gravityScale" type="float" value="1"/>
     <property name="restitution" type="float" value="0"/>
    </properties>
   </object>
@@ -431,7 +431,7 @@
     <property name="BodyType" value="DynamicBody"/>
     <property name="density" type="float" value="1"/>
     <property name="friction" type="float" value="0.1"/>
-    <property name="gravityScale" type="float" value="20"/>
+    <property name="gravityScale" type="float" value="1"/>
     <property name="restitution" type="float" value="0"/>
    </properties>
   </object>
@@ -440,7 +440,7 @@
     <property name="BodyType" value="DynamicBody"/>
     <property name="density" type="float" value="1"/>
     <property name="friction" type="float" value="0.1"/>
-    <property name="gravityScale" type="float" value="20"/>
+    <property name="gravityScale" type="float" value="1"/>
     <property name="restitution" type="float" value="0"/>
    </properties>
   </object>
@@ -449,7 +449,7 @@
     <property name="BodyType" value="DynamicBody"/>
     <property name="density" type="float" value="1"/>
     <property name="friction" type="float" value="0.1"/>
-    <property name="gravityScale" type="float" value="20"/>
+    <property name="gravityScale" type="float" value="1"/>
     <property name="restitution" type="float" value="0"/>
    </properties>
   </object>
